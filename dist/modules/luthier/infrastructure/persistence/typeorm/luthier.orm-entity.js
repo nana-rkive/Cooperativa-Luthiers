@@ -11,7 +11,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.LuthierOrmEntity = void 0;
 const typeorm_1 = require("typeorm");
-const instrumento_orm_entity_1 = require("../../../instrumento/infrastructure/persistence/instrumento.orm-entity");
+const instrumento_orm_entity_1 = require("../../../../instrumento/infrastructure/persistence/typeorm/instrumento.orm-entity");
 let LuthierOrmEntity = class LuthierOrmEntity {
     id;
     nomeMestre;

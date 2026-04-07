@@ -1,4 +1,4 @@
-import { LuthierOrmEntity } from '../../../luthier/infrastructure/persistence/luthier.orm-entity';
+import { LuthierOrmEntity } from '../../../../luthier/infrastructure/persistence/typeorm/luthier.orm-entity';
 export declare class InstrumentoOrmEntity {
     id: number;
     modeloMadeira: string;

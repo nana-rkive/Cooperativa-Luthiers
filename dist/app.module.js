@@ -11,14 +11,17 @@ const common_1 = require("@nestjs/common");
 const app_controller_1 = require("./app.controller");
 const app_service_1 = require("./app.service");
 const typeorm_1 = require("@nestjs/typeorm");
-const luthier_orm_entity_1 = require("./modules/luthier/infrastructure/persistence/luthier.orm-entity");
-const instrumento_orm_entity_1 = require("./modules/instrumento/infrastructure/persistence/instrumento.orm-entity");
+const luthier_orm_entity_1 = require("./modules/luthier/infrastructure/persistence/typeorm/luthier.orm-entity");
+const instrumento_orm_entity_1 = require("./modules/instrumento/infrastructure/persistence/typeorm/instrumento.orm-entity");
+const typeorm_module_1 = require("./shared/database/typeorm.module");
+const luthier_module_1 = require("./modules/luthier/luthier.module");
 let AppModule = class AppModule {
 };
 exports.AppModule = AppModule;
 exports.AppModule = AppModule = __decorate([
     (0, common_1.Module)({
         imports: [
+            typeorm_module_1.DatabaseModule, luthier_module_1.LuthierModule,
             typeorm_1.TypeOrmModule.forRoot({
                 type: 'sqlite',
                 database: 'cooperatica_luthiers.db',

@@ -1,5 +1,5 @@
 import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, JoinColumn } from 'typeorm';
-import { LuthierOrmEntity } from '../../../luthier/infrastructure/persistence/luthier.orm-entity';
+import { LuthierOrmEntity } from '../../../../luthier/infrastructure/persistence/typeorm/luthier.orm-entity';
 
 @Entity('instrumento_reparo')
 export class InstrumentoOrmEntity {

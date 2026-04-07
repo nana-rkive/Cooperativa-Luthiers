@@ -1,5 +1,5 @@
 import { Entity, PrimaryGeneratedColumn, Column, OneToMany } from 'typeorm';
-import { InstrumentoOrmEntity } from '../../../instrumento/infrastructure/persistence/instrumento.orm-entity';
+import { InstrumentoOrmEntity } from '../../../../instrumento/infrastructure/persistence/typeorm/instrumento.orm-entity';
 
 @Entity('luthier')
 export class LuthierOrmEntity {

@@ -11,20 +11,19 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 var __param = (this && this.__param) || function (paramIndex, decorator) {
     return function (target, key) { decorator(target, key, paramIndex); }
 };
-var _a;
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.InstrumentoController = void 0;
 const common_1 = require("@nestjs/common");
 const swagger_1 = require("@nestjs/swagger");
 const instrumento_service_1 = require("../../application/instrumento.service");
-const create_instrumento_dto_1 = require("./dto/create-instrumento.dto");
+const create_instrumento_dto_1 = require("./create-instrumento.dto");
 let InstrumentoController = class InstrumentoController {
     instrumentoService;
     constructor(instrumentoService) {
         this.instrumentoService = instrumentoService;
     }
     create(dto) {
-        return this.instrumentoService.create(dto.modeloMadeira, dto.dataEntrada, dto.reparoConcluido, dto.custoReparo);
+        return this.instrumentoService.create(dto.modeloMadeira, dto.dataEntrada, dto.reparoConcluido, dto.custoReparo, dto.luthierId);
     }
     findAll() {
         return this.instrumentoService.findAll();
@@ -45,7 +44,7 @@ __decorate([
     (0, swagger_1.ApiOperation)({ summary: 'Cria um usuário' }),
     __param(0, (0, common_1.Body)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [typeof (_a = typeof create_instrumento_dto_1.CreateInstrumentoDto !== "undefined" && create_instrumento_dto_1.CreateInstrumentoDto) === "function" ? _a : Object]),
+    __metadata("design:paramtypes", [create_instrumento_dto_1.CreateInstrumentoDto]),
     __metadata("design:returntype", void 0)
 ], InstrumentoController.prototype, "create", null);
 __decorate([

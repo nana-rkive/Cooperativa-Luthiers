@@ -1,7 +1,7 @@
 import { Body, Controller, Delete, Get, Param, Post, Patch } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiParam } from '@nestjs/swagger';
 import { InstrumentoService } from '../../application/instrumento.service';
-import { CreateInstrumentoDto } from './dto/create-instrumento.dto';
+import { CreateInstrumentoDto } from './create-instrumento.dto';
 
 @ApiTags('Instrumentos')
 @Controller('instrumentos')
@@ -11,7 +11,7 @@ export class InstrumentoController {
     @Post()
     @ApiOperation({ summary: 'Cria um usuário' })
     create(@Body() dto: CreateInstrumentoDto) {
-        return this.instrumentoService.create(dto.modeloMadeira, dto.dataEntrada, dto.reparoConcluido, dto.custoReparo);
+        return this.instrumentoService.create(dto.modeloMadeira, dto.dataEntrada, dto.reparoConcluido, dto.custoReparo, dto.luthierId);
     }
 
     @Get()

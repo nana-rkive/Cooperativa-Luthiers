@@ -8,7 +8,7 @@ export declare class InstrumentoTypeOrmRepository implements InstrumentoReposito
     create(instrumento: Instrumento): Promise<Instrumento>;
     findById(id: number): Promise<Instrumento | null>;
     findAll(): Promise<Instrumento[]>;
-    findByEmail(email: string): Promise<Instrumento | null>;
+    findByModeloMadeira(modeloMadeira: string): Promise<Instrumento | null>;
     update(instrumento: Instrumento): Promise<Instrumento>;
     delete(id: number): Promise<void>;
     private toDomain;

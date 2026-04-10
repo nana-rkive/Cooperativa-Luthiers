@@ -10,6 +10,9 @@ export class CreateInstrumentoDto {
     @ApiProperty({ example: 'ana@email.com' })
     reparoConcluido: boolean;
 
-    @ApiProperty({ example: 'ana@email.com' })
+    @ApiProperty({ example: 1 })
+    luthierId: number;
+
+    @ApiProperty({ example: 100 })
     custoReparo: number;
 }

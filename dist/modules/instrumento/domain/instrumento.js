@@ -7,14 +7,16 @@ class Instrumento {
     dataEntrada;
     reparoConcluido;
     custoReparo;
+    luthierId;
     createdAt;
     updatedAt;
-    constructor(id, modeloMadeira, dataEntrada, reparoConcluido, custoReparo, createdAt, updatedAt) {
+    constructor(id, modeloMadeira, dataEntrada, reparoConcluido, custoReparo, luthierId, createdAt, updatedAt) {
         this.id = id;
         this.modeloMadeira = modeloMadeira;
         this.dataEntrada = dataEntrada;
         this.reparoConcluido = reparoConcluido;
         this.custoReparo = custoReparo;
+        this.luthierId = luthierId;
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
     }

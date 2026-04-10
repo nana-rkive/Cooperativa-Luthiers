@@ -19,6 +19,7 @@ let InstrumentoOrmEntity = class InstrumentoOrmEntity {
     reparoConcluido;
     custoReparo;
     luthier;
+    luthierId;
 };
 exports.InstrumentoOrmEntity = InstrumentoOrmEntity;
 __decorate([
@@ -34,18 +35,22 @@ __decorate([
     __metadata("design:type", Date)
 ], InstrumentoOrmEntity.prototype, "dataEntrada", void 0);
 __decorate([
-    (0, typeorm_1.Column)(),
+    (0, typeorm_1.Column)({ default: false }),
     __metadata("design:type", Boolean)
 ], InstrumentoOrmEntity.prototype, "reparoConcluido", void 0);
 __decorate([
-    (0, typeorm_1.Column)({ type: 'decimal' }),
+    (0, typeorm_1.Column)({ type: 'decimal', precision: 10, scale: 2, default: 0.00 }),
     __metadata("design:type", Number)
 ], InstrumentoOrmEntity.prototype, "custoReparo", void 0);
 __decorate([
-    (0, typeorm_1.ManyToOne)(() => luthier_orm_entity_1.LuthierOrmEntity, (luthier) => luthier.instrumentos),
+    (0, typeorm_1.ManyToOne)(() => luthier_orm_entity_1.LuthierOrmEntity, (luthier) => luthier.instrumentos, { onDelete: 'CASCADE' }),
     (0, typeorm_1.JoinColumn)({ name: 'luthierId' }),
     __metadata("design:type", luthier_orm_entity_1.LuthierOrmEntity)
 ], InstrumentoOrmEntity.prototype, "luthier", void 0);
+__decorate([
+    (0, typeorm_1.Column)(),
+    __metadata("design:type", Number)
+], InstrumentoOrmEntity.prototype, "luthierId", void 0);
 exports.InstrumentoOrmEntity = InstrumentoOrmEntity = __decorate([
     (0, typeorm_1.Entity)('instrumento_reparo')
 ], InstrumentoOrmEntity);

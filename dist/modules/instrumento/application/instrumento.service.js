@@ -8,46 +8,69 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
+var __param = (this && this.__param) || function (paramIndex, decorator) {
+    return function (target, key) { decorator(target, key, paramIndex); }
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.InstrumentoService = void 0;
 const common_1 = require("@nestjs/common");
+const instrumento_1 = require("../domain/instrumento");
 let InstrumentoService = class InstrumentoService {
     instrumentoRepo;
-    constructor(instrumentoRepo) {
+    luthierRepo;
+    constructor(instrumentoRepo, luthierRepo) {
         this.instrumentoRepo = instrumentoRepo;
+        this.luthierRepo = luthierRepo;
     }
-    instrumentoRepo;
-    async create(name, email) {
-        const existing = await this.instrumentoRepo.findByEmail(email);
-        if (existing)
-            throw new Error('E-mail já cadastrado');
-        const user = new User(null, name.trim(), email.trim().toLowerCase(), true);
-        return this.usersRepo.create(user);
+    async create(modeloMadeira, dataEntrada, reparoConcluido, custoReparo, luthierId) {
+        const luthier = await this.luthierRepo.findById(luthierId);
+        if (!luthier) {
+            throw new common_1.NotFoundException('Luthier não encontrado para vincular ao instrumento');
+        }
+        if (new Date(dataEntrada) < new Date(luthier.dataAbertura)) {
+            throw new common_1.BadRequestException('A data de entrada não pode ser anterior à data de abertura da oficina');
+        }
+        if (custoReparo <= 0 || custoReparo > 50000) {
+            throw new common_1.BadRequestException('O custo do reparo deve ser maior que 0 e no máximo 50.000');
+        }
+        if (reparoConcluido && custoReparo <= 0) {
+            throw new common_1.BadRequestException('Instrumentos com reparo concluído devem ter um custo preenchido');
+        }
+        const todos = await this.instrumentoRepo.findAll();
+        const duplicado = todos.find(i => i.modeloMadeira === modeloMadeira &&
+            i.reparoConcluido === false &&
+            i.luthierId === luthierId);
+        if (duplicado) {
+            throw new common_1.ConflictException('Já existe um instrumento deste modelo em reparo para este luthier');
+        }
+        const instrumento = new instrumento_1.Instrumento(null, modeloMadeira, dataEntrada, reparoConcluido, custoReparo, luthierId);
+        return this.instrumentoRepo.create(instrumento);
     }
     async findAll() {
-        return this.usersRepo.findAll();
+        return this.instrumentoRepo.findAll();
     }
     async findById(id) {
-        return this.usersRepo.findById(id);
+        const instrumento = await this.instrumentoRepo.findById(id);
+        if (!instrumento)
+            throw new common_1.NotFoundException('Instrumento não encontrado');
+        return instrumento;
     }
     async deactivate(id) {
-        const user = await this.usersRepo.findById(id);
-        if (!user)
-            throw new Error('Usuário não encontrado');
-        user.isActive = false;
-        return this.usersRepo.update(user);
+        const instrumento = await this.instrumentoRepo.findById(id);
+        if (!instrumento)
+            throw new common_1.NotFoundException('Instrumento não encontrado');
+        instrumento.reparoConcluido = true;
+        return this.instrumentoRepo.update(instrumento);
     }
     async delete(id) {
-        await this.usersRepo.delete(id);
+        await this.instrumentoRepo.delete(id);
     }
 };
 exports.InstrumentoService = InstrumentoService;
-__decorate([
-    Inject('InstrumentoRepositoryPort'),
-    __metadata("design:type", Object)
-], InstrumentoService.prototype, "instrumentoRepo", void 0);
 exports.InstrumentoService = InstrumentoService = __decorate([
     (0, common_1.Injectable)(),
-    __metadata("design:paramtypes", [Object])
+    __param(0, (0, common_1.Inject)('InstrumentoRepositoryPort')),
+    __param(1, (0, common_1.Inject)('LuthierRepositoryPort')),
+    __metadata("design:paramtypes", [Object, Object])
 ], InstrumentoService);
 //# sourceMappingURL=instrumento.service.js.map

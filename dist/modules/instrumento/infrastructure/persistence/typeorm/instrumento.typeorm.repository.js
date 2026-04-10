@@ -29,30 +29,32 @@ let InstrumentoTypeOrmRepository = class InstrumentoTypeOrmRepository {
             dataEntrada: instrumento.dataEntrada,
             reparoConcluido: instrumento.reparoConcluido,
             custoReparo: instrumento.custoReparo,
+            luthier: { id: instrumento.luthierId },
         });
         const saved = await this.repo.save(orm);
         return this.toDomain(saved);
     }
     async findById(id) {
-        const found = await this.repo.findOneBy({ id });
+        const found = await this.repo.findOne({ where: { id }, relations: ['luthier'] });
         return found ? this.toDomain(found) : null;
     }
     async findAll() {
-        const items = await this.repo.find({ order: { id: 'DESC' } });
+        const items = await this.repo.find({ order: { id: 'DESC' }, relations: ['luthier'] });
         return items.map(this.toDomain);
     }
-    async findByEmail(email) {
-        const found = await this.repo.findOneBy({ modeloMadeira: email });
+    async findByModeloMadeira(modeloMadeira) {
+        const found = await this.repo.findOne({ where: { modeloMadeira }, relations: ['luthier'] });
         return found ? this.toDomain(found) : null;
     }
     async update(instrumento) {
-        const orm = await this.repo.findOneBy({ id: instrumento.id });
+        const orm = await this.repo.findOne({ where: { id: instrumento.id }, relations: ['luthier'] });
         if (!orm)
-            throw new Error('User not found');
+            throw new common_1.NotFoundException('Instrumento não encontrado');
         orm.modeloMadeira = instrumento.modeloMadeira;
         orm.dataEntrada = instrumento.dataEntrada;
         orm.reparoConcluido = instrumento.reparoConcluido;
         orm.custoReparo = instrumento.custoReparo;
+        orm.luthier = { id: instrumento.luthierId };
         const saved = await this.repo.save(orm);
         return this.toDomain(saved);
     }
@@ -60,7 +62,7 @@ let InstrumentoTypeOrmRepository = class InstrumentoTypeOrmRepository {
         await this.repo.delete({ id });
     }
     toDomain = (orm) => {
-        return new instrumento_1.Instrumento(orm.id, orm.modeloMadeira, orm.dataEntrada, orm.reparoConcluido, orm.custoReparo, orm.createdAt, orm.updatedAt);
+        return new instrumento_1.Instrumento(orm.id, orm.modeloMadeira, orm.dataEntrada, orm.reparoConcluido, orm.custoReparo, orm.luthier?.id || orm.luthierId, orm.createdAt, orm.updatedAt);
     };
 };
 exports.InstrumentoTypeOrmRepository = InstrumentoTypeOrmRepository;

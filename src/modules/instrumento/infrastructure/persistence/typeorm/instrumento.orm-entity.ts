@@ -7,18 +7,21 @@ export class InstrumentoOrmEntity {
     id: number;
 
     @Column()
-    modeloMadeira: string; // Ex: "Violino Stradivarius"[cite: 1]
+    modeloMadeira: string;
 
     @Column({ type: 'date' })
     dataEntrada: Date;
 
-    @Column()
+    @Column({ default: false })
     reparoConcluido: boolean;
 
-    @Column({ type: 'decimal' })
+    @Column({ type: 'decimal', precision: 10, scale: 2, default: 0.00 })
     custoReparo: number;
 
-    @ManyToOne(() => LuthierOrmEntity, (luthier) => luthier.instrumentos)
-    @JoinColumn({ name: 'luthierId' }) // Chave Estrangeira[cite: 1]
+    @ManyToOne(() => LuthierOrmEntity, (luthier) => luthier.instrumentos, { onDelete: 'CASCADE' })
+    @JoinColumn({ name: 'luthierId' }) // Chave Estrangeira
     luthier: LuthierOrmEntity;
+
+    @Column()
+    luthierId: number;
 }

@@ -6,4 +6,5 @@ export declare class InstrumentoOrmEntity {
     reparoConcluido: boolean;
     custoReparo: number;
     luthier: LuthierOrmEntity;
+    luthierId: number;
 }

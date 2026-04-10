@@ -15,6 +15,7 @@ class CreateInstrumentoDto {
     modeloMadeira;
     dataEntrada;
     reparoConcluido;
+    luthierId;
     custoReparo;
 }
 exports.CreateInstrumentoDto = CreateInstrumentoDto;
@@ -31,7 +32,11 @@ __decorate([
     __metadata("design:type", Boolean)
 ], CreateInstrumentoDto.prototype, "reparoConcluido", void 0);
 __decorate([
-    (0, swagger_1.ApiProperty)({ example: 'ana@email.com' }),
+    (0, swagger_1.ApiProperty)({ example: 1 }),
+    __metadata("design:type", Number)
+], CreateInstrumentoDto.prototype, "luthierId", void 0);
+__decorate([
+    (0, swagger_1.ApiProperty)({ example: 100 }),
     __metadata("design:type", Number)
 ], CreateInstrumentoDto.prototype, "custoReparo", void 0);
 //# sourceMappingURL=create-instrumento.dto.js.map

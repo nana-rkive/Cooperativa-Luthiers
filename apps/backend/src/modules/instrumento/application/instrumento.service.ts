@@ -1,7 +1,8 @@
-import { Injectable, Inject, BadRequestException, NotFoundException, ConflictException } from '@nestjs/common';
+import { Injectable, Inject, HttpStatus } from '@nestjs/common';
 import type { LuthierRepositoryPort } from '../../luthier/application/ports/luthier.repository.port';
 import type { InstrumentoRepositoryPort } from './ports/instrumento.repository.port';
 import { Instrumento } from '../domain/instrumento';
+import { BusinessException } from '../../../shared/exceptions/business.exception';
 
 @Injectable()
 export class InstrumentoService {
@@ -21,28 +22,28 @@ export class InstrumentoService {
         luthierId: number
     ): Promise<Instrumento> {
 
-        // 1. [Regra de Negócio] Verificar se o Luthier (Oficina) existe
+        // INSTRUMENTO_001: Verificar se o Luthier (Oficina) existe
         const luthier = await this.luthierRepo.findById(luthierId);
         if (!luthier) {
-            throw new NotFoundException(`Oficina de Luthier com ID ${luthierId} não encontrada.`);
+            throw new BusinessException('INSTRUMENTO_001', `Oficina de Luthier com ID ${luthierId} não encontrada.`, HttpStatus.NOT_FOUND);
         }
 
-        // 2. [Regra de Negócio 2] Data de entrada não pode ser anterior à abertura da oficina
+        // INSTRUMENTO_002: Data de entrada não pode ser anterior à abertura da oficina
         if (new Date(dataEntrada) < new Date(luthier.dataAbertura)) {
-            throw new BadRequestException('A data de entrada do instrumento não pode ser anterior à abertura da oficina.');
+            throw new BusinessException('INSTRUMENTO_002', 'A data de entrada do instrumento não pode ser anterior à abertura da oficina.');
         }
 
-        // 3. [Regra de Negócio 5] Custo do reparo deve estar entre 0 e 50.000
+        // INSTRUMENTO_003: Custo do reparo deve estar entre 0 e 50.000
         if (custoReparo < 0 || custoReparo > 50000) {
-            throw new BadRequestException('O custo do reparo deve ser entre R$ 0,00 e R$ 50.000,00.');
+            throw new BusinessException('INSTRUMENTO_003', 'O custo do reparo deve ser entre R$ 0,00 e R$ 50.000,00.');
         }
 
-        // 4. [Regra de Negócio 6] Se o reparo está concluído, o custo deve ser maior que zero
+        // INSTRUMENTO_004: Se o reparo está concluído, o custo deve ser maior que zero
         if (reparoConcluido && custoReparo <= 0) {
-            throw new BadRequestException('Um reparo concluído exige um custo de manutenção maior que zero.');
+            throw new BusinessException('INSTRUMENTO_004', 'Um reparo concluído exige um custo de manutenção maior que zero.');
         }
 
-        // 5. [Regra de Negócio 7] Evitar duplicidade de modelo em reparo para o mesmo luthier
+        // INSTRUMENTO_005: Evitar duplicidade de modelo em reparo para o mesmo luthier
         const todos = await this.instrumentoRepo.findAll();
         const duplicado = todos.find(i =>
             i.modeloMadeira === modeloMadeira &&
@@ -50,7 +51,7 @@ export class InstrumentoService {
             i.luthierId === luthierId
         );
         if (duplicado) {
-            throw new ConflictException('Este luthier já possui um instrumento deste modelo em reparo no momento.');
+            throw new BusinessException('INSTRUMENTO_005', 'Este luthier já possui um instrumento deste modelo em reparo no momento.', HttpStatus.CONFLICT);
         }
 
         const instrumento = new Instrumento(null, modeloMadeira, dataEntrada, reparoConcluido, custoReparo, luthierId);
@@ -63,21 +64,21 @@ export class InstrumentoService {
 
     async findById(id: number): Promise<Instrumento | null> {
         const instrumento = await this.instrumentoRepo.findById(id);
-        if (!instrumento) throw new NotFoundException('Registro de instrumento não encontrado.');
+        if (!instrumento) throw new BusinessException('INSTRUMENTO_006', 'Registro de instrumento não encontrado.', HttpStatus.NOT_FOUND);
         return instrumento;
     }
 
     async deactivate(id: number): Promise<Instrumento> {
         const instrumento = await this.instrumentoRepo.findById(id);
-        if (!instrumento) throw new NotFoundException('Instrumento não encontrado.');
+        if (!instrumento) throw new BusinessException('INSTRUMENTO_006', 'Instrumento não encontrado.', HttpStatus.NOT_FOUND);
 
-        instrumento.reparoConcluido = true; // Finaliza o processo de reparo
+        instrumento.reparoConcluido = true;
         return this.instrumentoRepo.update(instrumento);
     }
 
     async delete(id: number): Promise<void> {
         const exists = await this.instrumentoRepo.findById(id);
-        if (!exists) throw new NotFoundException('Instrumento não encontrado.');
+        if (!exists) throw new BusinessException('INSTRUMENTO_006', 'Instrumento não encontrado.', HttpStatus.NOT_FOUND);
         await this.instrumentoRepo.delete(id);
     }
 }

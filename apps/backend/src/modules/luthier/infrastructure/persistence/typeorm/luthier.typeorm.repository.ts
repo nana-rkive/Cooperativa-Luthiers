@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { LuthierRepositoryPort } from '../../../application/ports/luthier.repository.port';
+import { LuthierRepositoryPort, LuthierComInstrumentos } from '../../../application/ports/luthier.repository.port';
 import { Luthier } from '../../../domain/luthier';
 import { LuthierOrmEntity } from './luthier.orm-entity';
 
@@ -28,9 +28,23 @@ export class LuthierTypeOrmRepository implements LuthierRepositoryPort {
         return found ? this.toDomain(found) : null;
     }
 
-    async findByIdWithInstrumentos(id: number): Promise<any> {
+    async findByIdWithInstrumentos(id: number): Promise<LuthierComInstrumentos | null> {
         const found = await this.repo.findOne({ where: { id }, relations: ['instrumentos'] });
-        return found || null;
+        if (!found) return null;
+        return {
+            id: found.id,
+            nomeMestre: found.nomeMestre,
+            dataAbertura: found.dataAbertura,
+            certificada: found.certificada,
+            bancadasNum: found.bancadasNum,
+            instrumentos: (found.instrumentos ?? []).map(i => ({
+                id: i.id,
+                modeloMadeira: i.modeloMadeira,
+                dataEntrada: i.dataEntrada,
+                reparoConcluido: i.reparoConcluido,
+                custoReparo: i.custoReparo,
+            })),
+        } as LuthierComInstrumentos;
     }
 
     async findAll(): Promise<Luthier[]> {

@@ -1,4 +1,5 @@
-import { ExceptionFilter, Catch, ArgumentsHost, HttpException, HttpStatus } from "@nestjs/common";
+import { ExceptionFilter, Catch, ArgumentsHost, HttpException, HttpStatus } from '@nestjs/common';
+import { BusinessException } from '../exceptions/business.exception';
 
 @Catch()
 export class AllExceptionFilter implements ExceptionFilter {
@@ -12,16 +13,36 @@ export class AllExceptionFilter implements ExceptionFilter {
         ? exception.getStatus()
         : HttpStatus.INTERNAL_SERVER_ERROR;
 
-    const message =
-      exception instanceof HttpException
-        ? exception.getResponse()
-        : { message: 'Erro interno no servidor', error: exception };
-
-    response.status(status).json({
+    const base = {
       statusCode: status,
       timestamp: new Date().toISOString(),
       path: request.url,
-      ...(typeof message === 'object' ? message : { message }),
+    };
+
+    // Resposta padronizada para BusinessException: { code, message, details? }
+    if (exception instanceof BusinessException) {
+      const body = exception.getResponse() as { code: string; message: string };
+      return response.status(status).json({
+        ...base,
+        code: body.code,
+        message: body.message,
+      });
+    }
+
+    // Resposta padronizada para HttpException genérica
+    if (exception instanceof HttpException) {
+      const body = exception.getResponse();
+      return response.status(status).json({
+        ...base,
+        ...(typeof body === 'object' ? body : { message: body }),
+      });
+    }
+
+    // Erros internos inesperados
+    return response.status(status).json({
+      ...base,
+      code: 'INTERNAL_ERROR',
+      message: 'Erro interno no servidor',
     });
   }
 }

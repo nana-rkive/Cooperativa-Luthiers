@@ -8,10 +8,14 @@
     "test": "turbo test",
     "lint": "turbo lint",
     "format": "turbo format",
-    "start:dev": "cd apps/backend && npm run start:dev",
-    "start:backend": "cd apps/backend && npm run start:dev"
+    "start:frontend": "pnpm --filter frontend dev",
+    "start:backend": "pnpm --filter backend dev"
   },
   "devDependencies": {
+    "@types/express": "^5.0.6",
+    "@types/jest": "^30.0.0",
+    "@types/node": "^22.19.21",
+    "tslib": "^2.8.1",
     "turbo": "^2.5.4",
     "typescript": "^5.8.3"
   },

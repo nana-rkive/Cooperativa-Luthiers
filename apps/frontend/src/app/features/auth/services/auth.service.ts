@@ -12,13 +12,13 @@ export class AuthService {
 
   // Token JWT mantido estritamente em memória via Signal
   readonly jwtToken = signal<string | null>(null);
-  readonly currentUser = signal<AuthResponseDto['user'] | null>(null);
+  readonly currentUser = signal<AuthResponseDto['usuario'] | null>(null);
 
   login(credentials: LoginDto): Observable<AuthResponseDto> {
     return this.http.post<AuthResponseDto>(`${environment.apiUrl}/auth/login`, credentials).pipe(
       tap(response => {
         this.jwtToken.set(response.accessToken);
-        this.currentUser.set(response.user);
+        this.currentUser.set(response.usuario);
       })
     );
   }
@@ -27,7 +27,7 @@ export class AuthService {
     return this.http.post<AuthResponseDto>(`${environment.apiUrl}/auth/register`, data).pipe(
       tap(response => {
         this.jwtToken.set(response.accessToken);
-        this.currentUser.set(response.user);
+        this.currentUser.set(response.usuario);
       })
     );
   }

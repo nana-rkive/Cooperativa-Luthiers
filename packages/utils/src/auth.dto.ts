@@ -4,17 +4,22 @@ export interface LoginDto {
 }
 
 export interface RegisterDto {
-  nome: string;
+  primeiroNome: string;
+  sobrenome: string;
   email: string;
   senha: string;
 }
 
+export interface AuthUserDto {
+  id: number;
+  primeiroNome: string;
+  sobrenome: string;
+  email: string;
+  role: string;
+  ativo?: boolean;
+}
+
 export interface AuthResponseDto {
   accessToken: string;
-  user: {
-    id: string;
-    nome: string;
-    email: string;
-    ativo: boolean;
-  };
+  usuario: AuthUserDto;
 }

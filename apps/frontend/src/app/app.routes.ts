@@ -33,9 +33,19 @@ export const routes: Routes = [
     loadComponent: () => import('./features/luthier/luthier-form/luthier-form.component').then(c => c.LuthierFormComponent)
   },
   {
-    path: 'filho',
+    path: 'instrumentos',
     canActivate: [authGuard],
-    loadComponent: () => import('./features/filho/filho-list.component').then(c => c.FilhoListComponent)
+    loadComponent: () => import('./features/instrumento/instrumento-list/instrumento-list.component').then(c => c.InstrumentoListComponent)
+  },
+  {
+    path: 'instrumentos/novo',
+    canActivate: [authGuard],
+    loadComponent: () => import('./features/instrumento/instrumento-form/instrumento-form.component').then(c => c.InstrumentoFormComponent)
+  },
+  {
+    path: 'instrumentos/:id/editar',
+    canActivate: [authGuard],
+    loadComponent: () => import('./features/instrumento/instrumento-form/instrumento-form.component').then(c => c.InstrumentoFormComponent)
   },
   {
     path: 'admin',

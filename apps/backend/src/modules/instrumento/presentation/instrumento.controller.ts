@@ -3,8 +3,8 @@ import { ApiTags, ApiOperation, ApiParam, ApiBody, ApiBearerAuth, ApiResponse } 
 import { InstrumentoService } from '../application/instrumento.service';
 import { CreateInstrumentoDto } from './dto/create-instrumento.dto';
 import { JwtAuthGuard } from '../../usuario/infrastructure/jwt/jwt-auth.guard';
-import { RolesGuard } from '../../../../shared/guards/roles.guard';
-import { Roles } from '../../../../shared/guards/roles.decorator';
+import { RolesGuard } from '../../../shared/guards/roles.guard';
+import { Roles } from '../../../shared/guards/roles.decorator';
 
 @ApiTags('Instrumentos')
 @ApiBearerAuth()

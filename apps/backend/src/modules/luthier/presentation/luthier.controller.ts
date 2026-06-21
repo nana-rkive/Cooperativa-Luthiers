@@ -3,8 +3,8 @@ import { ApiTags, ApiOperation, ApiParam, ApiBearerAuth, ApiResponse } from '@ne
 import { LuthierService } from '../application/luthier.service';
 import { CreateLuthierDto } from './dto/create-luthier.dto';
 import { JwtAuthGuard } from '../../usuario/infrastructure/jwt/jwt-auth.guard';
-import { RolesGuard } from '../../../../shared/guards/roles.guard';
-import { Roles } from '../../../../shared/guards/roles.decorator';
+import { RolesGuard } from '../../../shared/guards/roles.guard';
+import { Roles } from '../../../shared/guards/roles.decorator';
 
 @ApiTags('Luthiers')
 @ApiBearerAuth()

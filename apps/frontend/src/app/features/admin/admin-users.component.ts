@@ -1,12 +1,12 @@
 import { Component, OnInit, inject, signal } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { NgClass, TitleCasePipe } from '@angular/common';
 import { AdminService } from './services/admin.service';
 import { AuthUserDto } from '@luthiers/utils';
 
 @Component({
   selector: 'app-admin-users',
   standalone: true,
-  imports: [CommonModule],
+  imports: [NgClass, TitleCasePipe],
   template: `
     <div class="max-w-6xl mx-auto p-6">
       <h1 class="text-3xl font-bold mb-6 text-gray-800">Gestão de Usuários</h1>

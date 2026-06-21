@@ -29,12 +29,27 @@ export class AllExceptionFilter implements ExceptionFilter {
       });
     }
 
-    // Resposta padronizada para HttpException genérica
+    // Resposta padronizada para HttpException genérica (incluindo BadRequest do class-validator)
     if (exception instanceof HttpException) {
       const body = exception.getResponse();
+      let message = 'Erro de requisição';
+      let details: string[] | Record<string, string[]> | undefined;
+
+      if (typeof body === 'object' && body !== null) {
+        const bodyObj = body as Record<string, any>;
+        message = Array.isArray(bodyObj.message) ? 'Erro de validação' : (bodyObj.message || message);
+        if (Array.isArray(bodyObj.message)) {
+          details = bodyObj.message;
+        }
+      } else if (typeof body === 'string') {
+        message = body;
+      }
+
       return response.status(status).json({
         ...base,
-        ...(typeof body === 'object' ? body : { message: body }),
+        code: status === 400 && details ? 'VALIDATION_ERROR' : 'HTTP_ERROR',
+        message,
+        ...(details ? { details } : {}),
       });
     }
 

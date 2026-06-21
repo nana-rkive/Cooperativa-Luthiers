@@ -5,7 +5,9 @@ import { Component, Input } from '@angular/core';
   standalone: true,
   template: `
     <div class="flex flex-col gap-1">
-      <label *ngIf="label" class="text-sm font-medium text-gray-700">{{ label }}</label>
+      @if (label) {
+        <label class="text-sm font-medium text-gray-700">{{ label }}</label>
+      }
       <input 
         [type]="type" 
         [placeholder]="placeholder" 

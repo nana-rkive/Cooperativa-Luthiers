@@ -18,9 +18,19 @@ export const routes: Routes = [
     loadComponent: () => import('./features/dashboard/dashboard.component').then(c => c.DashboardComponent)
   },
   {
-    path: 'pai',
+    path: 'luthiers',
     canActivate: [authGuard],
-    loadComponent: () => import('./features/pai/pai-list.component').then(c => c.PaiListComponent)
+    loadComponent: () => import('./features/luthier/luthier-list/luthier-list.component').then(c => c.LuthierListComponent)
+  },
+  {
+    path: 'luthiers/novo',
+    canActivate: [authGuard],
+    loadComponent: () => import('./features/luthier/luthier-form/luthier-form.component').then(c => c.LuthierFormComponent)
+  },
+  {
+    path: 'luthiers/:id/editar',
+    canActivate: [authGuard],
+    loadComponent: () => import('./features/luthier/luthier-form/luthier-form.component').then(c => c.LuthierFormComponent)
   },
   {
     path: 'filho',

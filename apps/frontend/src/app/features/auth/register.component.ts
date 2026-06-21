@@ -3,22 +3,35 @@ import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { AuthService } from './services/auth.service';
 import { parseAuthError } from '../../core/utils/auth-error.util';
-import { LoginDto } from '@luthiers/utils';
+import { RegisterDto } from '@luthiers/utils';
 import { CommonModule } from '@angular/common';
 
 @Component({
-  selector: 'app-login',
+  selector: 'app-register',
   standalone: true,
   imports: [ReactiveFormsModule, CommonModule, RouterLink],
   template: `
-    <div class="login-container max-w-md mx-auto mt-10 p-6 bg-white rounded-lg shadow-md">
-      <h2 class="text-2xl font-bold mb-6 text-center">Login</h2>
+    <div class="register-container max-w-md mx-auto mt-10 p-6 bg-white rounded-lg shadow-md">
+      <h2 class="text-2xl font-bold mb-6 text-center">Cadastro</h2>
       
       <div *ngIf="globalError()" class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-4">
         {{ globalError() }}
       </div>
 
-      <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+      <form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
+        <div class="mb-4">
+          <label class="block text-gray-700 text-sm font-bold mb-2" for="nome">Nome</label>
+          <input 
+            class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" 
+            [ngClass]="{'border-red-500': fieldHasError('nome')}"
+            id="nome" 
+            type="text" 
+            formControlName="nome">
+          <p *ngIf="fieldHasError('nome')" class="text-red-500 text-xs italic mt-1">
+            {{ getFieldError('nome') }}
+          </p>
+        </div>
+
         <div class="mb-4">
           <label class="block text-gray-700 text-sm font-bold mb-2" for="email">E-mail</label>
           <input 
@@ -50,35 +63,36 @@ import { CommonModule } from '@angular/common';
             class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline w-full" 
             type="submit"
             [disabled]="loading()">
-            {{ loading() ? 'Entrando...' : 'Entrar' }}
+            {{ loading() ? 'Cadastrando...' : 'Cadastrar' }}
           </button>
         </div>
         
         <div class="text-center mt-4">
-          <a routerLink="/register" class="inline-block align-baseline font-bold text-sm text-blue-500 hover:text-blue-800">
-            Não tem uma conta? Cadastre-se
+          <a routerLink="/login" class="inline-block align-baseline font-bold text-sm text-blue-500 hover:text-blue-800">
+            Já tem uma conta? Entre
           </a>
         </div>
       </form>
     </div>
   `
 })
-export class LoginComponent {
+export class RegisterComponent {
   private fb = inject(FormBuilder);
   private authService = inject(AuthService);
   private router = inject(Router);
 
-  loginForm = this.fb.group({
+  registerForm = this.fb.group({
+    nome: ['', Validators.required],
     email: ['', [Validators.required, Validators.email]],
-    senha: ['', Validators.required]
+    senha: ['', [Validators.required, Validators.minLength(6)]]
   });
 
   loading = signal(false);
   globalError = signal<string | null>(null);
 
   onSubmit(): void {
-    if (this.loginForm.invalid) {
-      this.loginForm.markAllAsTouched();
+    if (this.registerForm.invalid) {
+      this.registerForm.markAllAsTouched();
       return;
     }
 
@@ -86,16 +100,16 @@ export class LoginComponent {
     this.globalError.set(null);
     
     // reset external backend errors
-    Object.keys(this.loginForm.controls).forEach(key => {
-      const control = this.loginForm.get(key);
+    Object.keys(this.registerForm.controls).forEach(key => {
+      const control = this.registerForm.get(key);
       if (control?.hasError('backend')) {
         control.setErrors(null);
       }
     });
 
-    const credentials = this.loginForm.value as LoginDto;
+    const data = this.registerForm.value as RegisterDto;
 
-    this.authService.login(credentials).subscribe({
+    this.authService.register(data).subscribe({
       next: () => {
         this.loading.set(false);
         this.router.navigate(['/dashboard']);
@@ -109,8 +123,8 @@ export class LoginComponent {
         }
         
         Object.keys(parsedErrors).forEach(field => {
-          if (field !== 'global' && this.loginForm.contains(field)) {
-            this.loginForm.get(field)?.setErrors({ backend: parsedErrors[field] });
+          if (field !== 'global' && this.registerForm.contains(field)) {
+            this.registerForm.get(field)?.setErrors({ backend: parsedErrors[field] });
           }
         });
       }
@@ -118,16 +132,17 @@ export class LoginComponent {
   }
 
   fieldHasError(field: string): boolean {
-    const control = this.loginForm.get(field);
+    const control = this.registerForm.get(field);
     return control ? (control.invalid && (control.dirty || control.touched)) : false;
   }
 
   getFieldError(field: string): string {
-    const control = this.loginForm.get(field);
+    const control = this.registerForm.get(field);
     if (!control) return '';
     
     if (control.hasError('required')) return 'Campo obrigatório';
     if (control.hasError('email')) return 'E-mail inválido';
+    if (control.hasError('minlength')) return 'Senha deve ter no mínimo 6 caracteres';
     if (control.hasError('backend')) return control.getError('backend');
     
     return 'Campo inválido';

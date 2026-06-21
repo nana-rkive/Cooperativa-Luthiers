@@ -4,6 +4,7 @@ packages:
 onlyBuiltDependencies:
   - '@parcel/watcher'
   - '@scarf/scarf'
+  - bcrypt
   - esbuild
   - lmdb
   - msgpackr-extract

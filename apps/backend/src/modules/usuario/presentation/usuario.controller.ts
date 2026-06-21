@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Param, Post, Put } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Post, Put, UseGuards } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiParam, ApiResponse, ApiBearerAuth } from '@nestjs/swagger';
 import { UsuarioService } from '../application/usuario.service';
 import { CadastroUsuarioDto } from './dto/cadastro-usuario.dto';
@@ -6,8 +6,11 @@ import { LoginUsuarioDto } from './dto/login-usuario.dto';
 import { ValidarEmailDto } from './dto/validar-email.dto';
 import { RedefinirSenhaDto } from './dto/redefinir-senha.dto';
 import { UpdateUsuarioDto } from './dto/update-usuario.dto';
+import { JwtAuthGuard } from '../infrastructure/jwt/jwt-auth.guard';
+import { RolesGuard } from '../../../shared/guards/roles.guard';
+import { Roles } from '../../../shared/guards/roles.decorator';
 
-// ─── Autenticação ─────────────────────────────────────────────────────────────
+// ─── Autenticação (rotas públicas) ────────────────────────────────────────────
 
 @ApiTags('Autenticação')
 @Controller('auth')
@@ -90,34 +93,44 @@ export class AuthController {
     }
 }
 
-// ─── CRUD de Usuários ─────────────────────────────────────────────────────────
+// ─── CRUD de Usuários (protegido — apenas admin) ──────────────────────────────
 
 @ApiTags('Usuários')
 @ApiBearerAuth()
+@UseGuards(JwtAuthGuard, RolesGuard)
 @Controller('usuarios')
 export class UsuarioController {
     constructor(private readonly usuarioService: UsuarioService) { }
 
     @Get()
+    @Roles('admin')
     @ApiOperation({ summary: 'Lista todos os usuários cadastrados' })
     @ApiResponse({ status: 200, description: 'Lista retornada com sucesso.' })
+    @ApiResponse({ status: 401, description: 'Não autenticado.' })
+    @ApiResponse({ status: 403, description: 'Sem permissão — requer role admin.' })
     findAll() {
         return this.usuarioService.findAll();
     }
 
     @Get(':id')
+    @Roles('admin')
     @ApiParam({ name: 'id', example: 1 })
     @ApiOperation({ summary: 'Busca um usuário pelo ID' })
     @ApiResponse({ status: 200, description: 'Usuário encontrado.' })
+    @ApiResponse({ status: 401, description: 'Não autenticado.' })
+    @ApiResponse({ status: 403, description: 'Sem permissão — requer role admin.' })
     @ApiResponse({ status: 404, description: 'Usuário não encontrado.' })
     findById(@Param('id') id: string) {
         return this.usuarioService.findById(Number(id));
     }
 
     @Put(':id')
+    @Roles('admin')
     @ApiParam({ name: 'id', example: 1 })
     @ApiOperation({ summary: 'Atualiza os dados de um usuário' })
     @ApiResponse({ status: 200, description: 'Usuário atualizado.' })
+    @ApiResponse({ status: 401, description: 'Não autenticado.' })
+    @ApiResponse({ status: 403, description: 'Sem permissão — requer role admin.' })
     @ApiResponse({ status: 404, description: 'Usuário não encontrado.' })
     @ApiResponse({ status: 409, description: 'Novo e-mail já está em uso.' })
     atualizar(@Param('id') id: string, @Body() dto: UpdateUsuarioDto) {
@@ -130,9 +143,12 @@ export class UsuarioController {
     }
 
     @Delete(':id')
+    @Roles('admin')
     @ApiParam({ name: 'id', example: 1 })
     @ApiOperation({ summary: 'Remove um usuário pelo ID' })
     @ApiResponse({ status: 200, description: 'Usuário removido com sucesso.' })
+    @ApiResponse({ status: 401, description: 'Não autenticado.' })
+    @ApiResponse({ status: 403, description: 'Sem permissão — requer role admin.' })
     @ApiResponse({ status: 404, description: 'Usuário não encontrado.' })
     deletar(@Param('id') id: string) {
         return this.usuarioService.deletar(Number(id));

@@ -26,6 +26,8 @@ import { JwtStrategy } from './infrastructure/jwt/jwt.strategy';
             useClass: UsuarioTypeOrmRepository,
         },
     ],
-    exports: [UsuarioService, 'UsuarioRepositoryPort'],
+    // PassportModule e JwtModule exportados para que outros módulos
+    // que importem UsuarioModule possam usar JwtAuthGuard e RolesGuard
+    exports: [UsuarioService, 'UsuarioRepositoryPort', PassportModule, JwtModule],
 })
 export class UsuarioModule { }

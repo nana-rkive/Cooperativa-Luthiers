@@ -6,9 +6,13 @@ import { InstrumentoOrmEntity } from './infrastructure/persistence/typeorm/instr
 import { InstrumentoTypeOrmRepository } from './infrastructure/persistence/typeorm/instrumento.typeorm.repository';
 import { LuthierOrmEntity } from '../luthier/infrastructure/persistence/typeorm/luthier.orm-entity';
 import { LuthierTypeOrmRepository } from '../luthier/infrastructure/persistence/typeorm/luthier.typeorm.repository';
+import { UsuarioModule } from '../usuario/usuario.module';
 
 @Module({
-    imports: [TypeOrmModule.forFeature([InstrumentoOrmEntity, LuthierOrmEntity])],
+    imports: [
+        TypeOrmModule.forFeature([InstrumentoOrmEntity, LuthierOrmEntity]),
+        UsuarioModule, // fornece PassportModule, JwtModule e JwtStrategy para os guards
+    ],
     controllers: [InstrumentoController],
     providers: [
         InstrumentoService,

@@ -1,4 +1,5 @@
 import { Entity, PrimaryGeneratedColumn, Column } from 'typeorm';
+import { UsuarioRole } from '../../../domain/usuario';
 
 @Entity('usuario')
 export class UsuarioOrmEntity {
@@ -19,4 +20,10 @@ export class UsuarioOrmEntity {
 
     @Column({ default: false })
     ativo: boolean;
+
+    @Column({ default: 'luthier' })
+    role: UsuarioRole;
+
+    @Column({ nullable: true, type: 'varchar' })
+    tokenAtivacao: string | null;
 }

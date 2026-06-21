@@ -19,6 +19,8 @@ export class UsuarioTypeOrmRepository implements UsuarioRepositoryPort {
             email: usuario.email,
             senha: usuario.senha,
             ativo: usuario.ativo,
+            role: usuario.role,
+            tokenAtivacao: usuario.tokenAtivacao,
         });
         const saved = await this.repo.save(orm);
         return this.toDomain(saved);
@@ -39,6 +41,11 @@ export class UsuarioTypeOrmRepository implements UsuarioRepositoryPort {
         return found ? this.toDomain(found) : null;
     }
 
+    async findByTokenAtivacao(token: string): Promise<Usuario | null> {
+        const found = await this.repo.findOneBy({ tokenAtivacao: token });
+        return found ? this.toDomain(found) : null;
+    }
+
     async update(usuario: Usuario): Promise<Usuario> {
         const orm = await this.repo.findOneBy({ id: usuario.id! });
         if (!orm) throw new Error('Usuário não encontrado');
@@ -48,6 +55,8 @@ export class UsuarioTypeOrmRepository implements UsuarioRepositoryPort {
         orm.email = usuario.email;
         orm.senha = usuario.senha;
         orm.ativo = usuario.ativo;
+        orm.role = usuario.role;
+        orm.tokenAtivacao = usuario.tokenAtivacao;
 
         const saved = await this.repo.save(orm);
         return this.toDomain(saved);
@@ -58,6 +67,15 @@ export class UsuarioTypeOrmRepository implements UsuarioRepositoryPort {
     }
 
     private toDomain = (orm: UsuarioOrmEntity): Usuario => {
-        return new Usuario(orm.id, orm.primeiroNome, orm.sobrenome, orm.email, orm.senha, orm.ativo);
+        return new Usuario(
+            orm.id,
+            orm.primeiroNome,
+            orm.sobrenome,
+            orm.email,
+            orm.senha,
+            orm.ativo,
+            orm.role,
+            orm.tokenAtivacao,
+        );
     };
 }

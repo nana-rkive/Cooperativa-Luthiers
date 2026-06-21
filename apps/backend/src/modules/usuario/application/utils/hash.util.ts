@@ -1,15 +1,17 @@
-import * as crypto from 'crypto';
+import * as bcrypt from 'bcrypt';
+
+const SALT_ROUNDS = 12;
 
 /**
- * hashes a password using HMAC SHA-256 with a fixed salt
+ * Gera o hash bcrypt de uma senha em texto plano.
  */
-export function hashPassword(password: string, salt: string = 'luthiers-cooperative-salt-2026'): string {
-    return crypto.createHmac('sha256', salt).update(password).digest('hex');
+export async function hashPassword(password: string): Promise<string> {
+    return bcrypt.hash(password, SALT_ROUNDS);
 }
 
 /**
- * compares a password with a target hash
+ * Compara uma senha em texto plano com um hash bcrypt armazenado.
  */
-export function comparePassword(password: string, hash: string): boolean {
-    return hashPassword(password) === hash;
+export async function comparePassword(password: string, hash: string): Promise<boolean> {
+    return bcrypt.compare(password, hash);
 }

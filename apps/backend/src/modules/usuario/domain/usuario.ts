@@ -1,3 +1,5 @@
+export type UsuarioRole = 'admin' | 'luthier';
+
 export class Usuario {
     constructor(
         public readonly id: number | null,
@@ -6,6 +8,8 @@ export class Usuario {
         public email: string,
         public senha: string,
         public ativo: boolean = false,
+        public role: UsuarioRole = 'luthier',
+        public tokenAtivacao: string | null = null,
     ) {
         this.validate();
     }

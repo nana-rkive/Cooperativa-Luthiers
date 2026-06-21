@@ -1,5 +1,5 @@
 import { Body, Controller, Delete, Get, Param, Post, Put } from '@nestjs/common';
-import { ApiTags, ApiOperation, ApiParam, ApiResponse } from '@nestjs/swagger';
+import { ApiTags, ApiOperation, ApiParam, ApiResponse, ApiBearerAuth } from '@nestjs/swagger';
 import { UsuarioService } from '../application/usuario.service';
 import { CadastroUsuarioDto } from './dto/cadastro-usuario.dto';
 import { LoginUsuarioDto } from './dto/login-usuario.dto';
@@ -14,11 +14,29 @@ import { UpdateUsuarioDto } from './dto/update-usuario.dto';
 export class AuthController {
     constructor(private readonly usuarioService: UsuarioService) { }
 
+    @Post('register')
+    @ApiOperation({
+        summary: 'Registra um novo usuário (conta criada inativa, aguarda ativação via token)',
+    })
+    @ApiResponse({ status: 201, description: 'Usuário registrado. Aguardando ativação.' })
+    @ApiResponse({ status: 409, description: 'E-mail já cadastrado.' })
+    @ApiResponse({ status: 400, description: 'Dados inválidos.' })
+    async register(@Body() dto: CadastroUsuarioDto) {
+        return this.usuarioService.cadastro(
+            dto.primeiroNome,
+            dto.sobrenome,
+            dto.email,
+            dto.senha,
+        );
+    }
+
+    /** @deprecated — mantido por retrocompatibilidade. Use POST /auth/register */
     @Post('cadastro')
-    @ApiOperation({ summary: 'Cadastra um novo usuário (conta inicia aguardando ativação)' })
-    @ApiResponse({ status: 201, description: 'Usuário cadastrado com sucesso. Aguardando ativação.' })
-    @ApiResponse({ status: 409, description: 'E-mail já cadastrado — redirecionar para login.' })
-    @ApiResponse({ status: 400, description: 'Dados inválidos (campo obrigatório ausente, senha fraca, e-mail inválido).' })
+    @ApiOperation({
+        summary: '[Legado] Alias de /auth/register. Prefira usar /auth/register.',
+        deprecated: true,
+    })
+    @ApiResponse({ status: 201, description: 'Usuário cadastrado com sucesso.' })
     async cadastro(@Body() dto: CadastroUsuarioDto) {
         return this.usuarioService.cadastro(
             dto.primeiroNome,
@@ -28,26 +46,41 @@ export class AuthController {
         );
     }
 
+    @Get('ativar/:token')
+    @ApiOperation({
+        summary: 'Ativa a conta do usuário via token recebido por e-mail',
+    })
+    @ApiParam({ name: 'token', description: 'UUID de ativação enviado ao e-mail do usuário' })
+    @ApiResponse({ status: 200, description: 'Conta ativada com sucesso.' })
+    @ApiResponse({ status: 400, description: 'Token inválido ou expirado.' })
+    @ApiResponse({ status: 409, description: 'Conta já foi ativada anteriormente.' })
+    async ativarConta(@Param('token') token: string) {
+        return this.usuarioService.ativarConta(token);
+    }
+
     @Post('login')
-    @ApiOperation({ summary: 'Realiza o login validando credenciais contra o banco de dados' })
-    @ApiResponse({ status: 200, description: 'Login realizado com sucesso.' })
-    @ApiResponse({ status: 400, description: 'E-mail não cadastrado (faça seu cadastro) ou senha incorreta.' })
+    @ApiOperation({
+        summary: 'Autentica o usuário e retorna um JWT (Bearer Token)',
+    })
+    @ApiResponse({ status: 200, description: 'Login realizado. Retorna accessToken + dados do usuário.' })
+    @ApiResponse({ status: 400, description: 'E-mail não cadastrado ou senha incorreta.' })
+    @ApiResponse({ status: 403, description: 'Conta aguardando ativação.' })
     async login(@Body() dto: LoginUsuarioDto) {
         return this.usuarioService.login(dto.email, dto.senha);
     }
 
     @Post('recuperar-senha/validar-email')
-    @ApiOperation({ summary: 'Passo 1 da recuperação: valida se o e-mail existe no banco de dados' })
-    @ApiResponse({ status: 200, description: 'E-mail válido — prosseguir para redefinição de senha.' })
+    @ApiOperation({ summary: 'Passo 1 da recuperação: valida se o e-mail existe no banco' })
+    @ApiResponse({ status: 200, description: 'E-mail válido.' })
     @ApiResponse({ status: 400, description: 'E-mail não cadastrado.' })
     async validarEmail(@Body() dto: ValidarEmailDto) {
         return this.usuarioService.validarEmail(dto.email);
     }
 
     @Post('recuperar-senha/redefinir')
-    @ApiOperation({ summary: 'Passo 2 da recuperação: redefine a senha (os dois campos devem ser idênticos)' })
+    @ApiOperation({ summary: 'Passo 2 da recuperação: redefine a senha' })
     @ApiResponse({ status: 200, description: 'Senha atualizada com sucesso.' })
-    @ApiResponse({ status: 400, description: 'As senhas não coincidem, e-mail não cadastrado ou senha fraca.' })
+    @ApiResponse({ status: 400, description: 'Senhas não coincidem ou e-mail inválido.' })
     async redefinirSenha(@Body() dto: RedefinirSenhaDto) {
         return this.usuarioService.redefinirSenha(
             dto.email,
@@ -60,13 +93,14 @@ export class AuthController {
 // ─── CRUD de Usuários ─────────────────────────────────────────────────────────
 
 @ApiTags('Usuários')
+@ApiBearerAuth()
 @Controller('usuarios')
 export class UsuarioController {
     constructor(private readonly usuarioService: UsuarioService) { }
 
     @Get()
     @ApiOperation({ summary: 'Lista todos os usuários cadastrados' })
-    @ApiResponse({ status: 200, description: 'Lista de usuários retornada com sucesso.' })
+    @ApiResponse({ status: 200, description: 'Lista retornada com sucesso.' })
     findAll() {
         return this.usuarioService.findAll();
     }
@@ -82,10 +116,10 @@ export class UsuarioController {
 
     @Put(':id')
     @ApiParam({ name: 'id', example: 1 })
-    @ApiOperation({ summary: 'Atualiza os dados de um usuário (nome, sobrenome, e-mail, status de ativação)' })
-    @ApiResponse({ status: 200, description: 'Usuário atualizado com sucesso.' })
+    @ApiOperation({ summary: 'Atualiza os dados de um usuário' })
+    @ApiResponse({ status: 200, description: 'Usuário atualizado.' })
     @ApiResponse({ status: 404, description: 'Usuário não encontrado.' })
-    @ApiResponse({ status: 409, description: 'Novo e-mail já está em uso por outro usuário.' })
+    @ApiResponse({ status: 409, description: 'Novo e-mail já está em uso.' })
     atualizar(@Param('id') id: string, @Body() dto: UpdateUsuarioDto) {
         return this.usuarioService.atualizar(Number(id), {
             primeiroNome: dto.primeiroNome,

@@ -5,6 +5,7 @@ import { DatabaseModule } from './shared/database/typeorm.module';
 import { LuthierModule } from './modules/luthier/luthier.module';
 import { InstrumentoModule } from './modules/instrumento/instrumento.module';
 import { UsuarioModule } from './modules/usuario/usuario.module';
+import { SeedModule } from './shared/seed/seed.module';
 
 @Module({
   imports: [
@@ -12,6 +13,7 @@ import { UsuarioModule } from './modules/usuario/usuario.module';
     LuthierModule,
     InstrumentoModule,
     UsuarioModule,
+    SeedModule,
   ],
   controllers: [AppController],
   providers: [AppService],

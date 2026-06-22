@@ -3,27 +3,27 @@ import type { UsuarioRole } from '../../../domain/usuario';
 
 @Entity('usuario')
 export class UsuarioOrmEntity {
-    @PrimaryGeneratedColumn()
-    id: number;
+  @PrimaryGeneratedColumn()
+  id: number;
 
-    @Column()
-    primeiroNome: string;
+  @Column()
+  primeiroNome: string;
 
-    @Column()
-    sobrenome: string;
+  @Column()
+  sobrenome: string;
 
-    @Column({ unique: true })
-    email: string;
+  @Column({ unique: true })
+  email: string;
 
-    @Column()
-    senha: string;
+  @Column()
+  senha: string;
 
-    @Column({ default: false })
-    ativo: boolean;
+  @Column({ default: false })
+  ativo: boolean;
 
-    @Column({ default: 'luthier' })
-    role: UsuarioRole;
+  @Column({ default: 'luthier' })
+  role: UsuarioRole;
 
-    @Column({ nullable: true, type: 'varchar' })
-    tokenAtivacao: string | null;
+  @Column({ nullable: true, type: 'varchar' })
+  tokenAtivacao: string | null;
 }

@@ -5,15 +5,15 @@ import type { JwtPayload } from '../../application/usuario.service';
 
 @Injectable()
 export class JwtStrategy extends PassportStrategy(Strategy) {
-    constructor() {
-        super({
-            jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
-            ignoreExpiration: false,
-            secretOrKey: process.env.JWT_SECRET ?? 'cooperativa-luthiers-secret-dev',
-        });
-    }
+  constructor() {
+    super({
+      jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
+      ignoreExpiration: false,
+      secretOrKey: process.env.JWT_SECRET ?? 'cooperativa-luthiers-secret-dev',
+    });
+  }
 
-    validate(payload: JwtPayload): JwtPayload {
-        return payload;
-    }
+  validate(payload: JwtPayload): JwtPayload {
+    return payload;
+  }
 }

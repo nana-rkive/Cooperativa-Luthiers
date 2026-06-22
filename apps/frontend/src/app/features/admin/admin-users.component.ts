@@ -1,5 +1,5 @@
 import { Component, inject, OnInit, signal, computed } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { NgClass } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { UsuarioService } from './services/usuario.service';
 import { AuthUserDto } from '@luthiers/utils';
@@ -8,7 +8,7 @@ import { parseAuthError } from '../../core/utils/auth-error.util';
 @Component({
   selector: 'app-admin-users',
   standalone: true,
-  imports: [CommonModule, RouterLink],
+  imports: [NgClass, RouterLink],
   template: `
     <div class="container mx-auto p-4 max-w-6xl">
       <div class="flex justify-between items-center mb-6">

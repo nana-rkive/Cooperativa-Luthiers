@@ -4,19 +4,21 @@ import { Router, RouterLink } from '@angular/router';
 import { AuthService } from './services/auth.service';
 import { parseAuthError } from '../../core/utils/auth-error.util';
 import { RegisterDto } from '@luthiers/utils';
-import { CommonModule } from '@angular/common';
+import { NgClass } from '@angular/common';
 
 @Component({
   selector: 'app-register',
   standalone: true,
-  imports: [ReactiveFormsModule, CommonModule, RouterLink],
+  imports: [ReactiveFormsModule, NgClass, RouterLink],
   template: `
     <div class="register-container max-w-md mx-auto mt-10 p-6 bg-white rounded-lg shadow-md">
       <h2 class="text-2xl font-bold mb-6 text-center">Cadastro</h2>
       
-      <div *ngIf="globalError()" class="bg-red-100 text-red-700 p-3 rounded mb-4">
-        {{ globalError() }}
-      </div>
+      @if (globalError()) {
+        <div class="bg-red-100 text-red-700 p-3 rounded mb-4">
+          {{ globalError() }}
+        </div>
+      }
 
       <form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
         <div class="mb-4 flex gap-4">
@@ -28,9 +30,11 @@ import { CommonModule } from '@angular/common';
               id="primeiroNome" 
               type="text" 
               formControlName="primeiroNome">
-            <p *ngIf="fieldHasError('primeiroNome')" class="text-red-500 text-xs mt-1">
-              {{ getFieldError('primeiroNome') }}
-            </p>
+            @if (fieldHasError('primeiroNome')) {
+              <p class="text-red-500 text-xs mt-1">
+                {{ getFieldError('primeiroNome') }}
+              </p>
+            }
           </div>
           <div class="w-1/2">
             <label class="block text-gray-700 text-sm font-bold mb-2" for="sobrenome">Sobrenome</label>
@@ -40,9 +44,11 @@ import { CommonModule } from '@angular/common';
               id="sobrenome" 
               type="text" 
               formControlName="sobrenome">
-            <p *ngIf="fieldHasError('sobrenome')" class="text-red-500 text-xs mt-1">
-              {{ getFieldError('sobrenome') }}
-            </p>
+            @if (fieldHasError('sobrenome')) {
+              <p class="text-red-500 text-xs mt-1">
+                {{ getFieldError('sobrenome') }}
+              </p>
+            }
           </div>
         </div>
 
@@ -54,9 +60,11 @@ import { CommonModule } from '@angular/common';
             id="email" 
             type="email" 
             formControlName="email">
-          <p *ngIf="fieldHasError('email')" class="text-red-500 text-xs mt-1">
-            {{ getFieldError('email') }}
-          </p>
+          @if (fieldHasError('email')) {
+            <p class="text-red-500 text-xs mt-1">
+              {{ getFieldError('email') }}
+            </p>
+          }
         </div>
 
         <div class="mb-6">
@@ -67,9 +75,11 @@ import { CommonModule } from '@angular/common';
             id="senha" 
             type="password" 
             formControlName="senha">
-          <p *ngIf="fieldHasError('senha')" class="text-red-500 text-xs mt-1">
-            {{ getFieldError('senha') }}
-          </p>
+          @if (fieldHasError('senha')) {
+            <p class="text-red-500 text-xs mt-1">
+              {{ getFieldError('senha') }}
+            </p>
+          }
         </div>
 
         <div class="flex items-center justify-between">

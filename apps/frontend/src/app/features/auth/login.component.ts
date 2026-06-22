@@ -4,19 +4,21 @@ import { Router, RouterLink } from '@angular/router';
 import { AuthService } from './services/auth.service';
 import { parseAuthError } from '../../core/utils/auth-error.util';
 import { LoginDto } from '@luthiers/utils';
-import { CommonModule } from '@angular/common';
+import { NgClass } from '@angular/common';
 
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [ReactiveFormsModule, CommonModule, RouterLink],
+  imports: [ReactiveFormsModule, NgClass, RouterLink],
   template: `
     <div class="login-container max-w-md mx-auto mt-10 p-6 bg-white rounded-lg shadow-md">
       <h2 class="text-2xl font-bold mb-6 text-center">Login</h2>
       
-      <div *ngIf="globalError()" class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-4">
-        {{ globalError() }}
-      </div>
+      @if (globalError()) {
+        <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-4">
+          {{ globalError() }}
+        </div>
+      }
 
       <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
         <div class="mb-4">
@@ -27,9 +29,11 @@ import { CommonModule } from '@angular/common';
             id="email" 
             type="email" 
             formControlName="email">
-          <p *ngIf="fieldHasError('email')" class="text-red-500 text-xs italic mt-1">
-            {{ getFieldError('email') }}
-          </p>
+          @if (fieldHasError('email')) {
+            <p class="text-red-500 text-xs italic mt-1">
+              {{ getFieldError('email') }}
+            </p>
+          }
         </div>
 
         <div class="mb-6">
@@ -40,9 +44,11 @@ import { CommonModule } from '@angular/common';
             id="senha" 
             type="password" 
             formControlName="senha">
-          <p *ngIf="fieldHasError('senha')" class="text-red-500 text-xs italic mt-1">
-            {{ getFieldError('senha') }}
-          </p>
+          @if (fieldHasError('senha')) {
+            <p class="text-red-500 text-xs italic mt-1">
+              {{ getFieldError('senha') }}
+            </p>
+          }
         </div>
 
         <div class="flex items-center justify-between">

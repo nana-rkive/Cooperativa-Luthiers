@@ -24,7 +24,7 @@ export class LuthierService {
   }
 
   update(id: string, data: UpdateLuthierDto): Observable<LuthierDto> {
-    return this.http.patch<LuthierDto>(`${this.apiUrl}/${id}`, data);
+    return this.http.put<LuthierDto>(`${this.apiUrl}/${id}`, data);
   }
 
   delete(id: string): Observable<void> {

@@ -8,24 +8,33 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   app.enableCors();
   app.useGlobalFilters(new AllExceptionFilter());
-  app.useGlobalPipes(new ValidationPipe({
-    whitelist: true,
-    forbidNonWhitelisted: true,
-    exceptionFactory: (validationErrors = []) => {
-      const errors = validationErrors.reduce((acc, error) => {
-        acc[error.property] = Object.values(error.constraints || {});
-        return acc;
-      }, {} as Record<string, string[]>);
-      return new BadRequestException({ statusCode: 400, message: 'Erro de validação', errors });
-    },
-  }));
+  app.useGlobalPipes(
+    new ValidationPipe({
+      whitelist: true,
+      forbidNonWhitelisted: true,
+      exceptionFactory: (validationErrors = []) => {
+        const errors = validationErrors.reduce(
+          (acc, error) => {
+            acc[error.property] = Object.values(error.constraints || {});
+            return acc;
+          },
+          {} as Record<string, string[]>,
+        );
+        return new BadRequestException({
+          statusCode: 400,
+          message: 'Erro de validação',
+          errors,
+        });
+      },
+    }),
+  );
 
   const config = new DocumentBuilder()
     .setTitle('Cooperativa de Luthiers')
     .setDescription(
       'API para gerenciamento de luthiers e instrumentos.\n\n' +
-      '**Autenticação:** Faça login em `POST /auth/login` para obter o `accessToken` ' +
-      'e clique em **Authorize** para inserir o token no formato `Bearer <token>`.',
+        '**Autenticação:** Faça login em `POST /auth/login` para obter o `accessToken` ' +
+        'e clique em **Authorize** para inserir o token no formato `Bearer <token>`.',
     )
     .setVersion('1.0')
     .addTag('Autenticação', 'Registro, login e ativação de conta')
@@ -52,4 +61,4 @@ async function bootstrap() {
 
   await app.listen(process.env.PORT ?? 3000);
 }
-bootstrap();
+void bootstrap();

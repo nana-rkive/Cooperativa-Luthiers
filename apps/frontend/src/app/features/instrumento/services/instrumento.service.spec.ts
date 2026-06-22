@@ -2,7 +2,7 @@ import { TestBed } from '@angular/core/testing';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { provideHttpClient } from '@angular/common/http';
 import { environment } from '../../../../environments/environment';
-import { describe, it, expect, beforeEach, afterEach } from 'vitest';
+
 import { InstrumentoService } from './instrumento.service';
 import { CreateInstrumentoDto, InstrumentoDto, UpdateInstrumentoDto } from '@luthiers/utils';
 
@@ -76,7 +76,7 @@ describe('InstrumentoService', () => {
     });
 
     const req = httpTestingController.expectOne(`${apiUrl}/1`);
-    expect(req.request.method).toBe('PATCH');
+    expect(req.request.method).toBe('PUT');
     expect(req.request.body).toEqual(dto);
     req.flush(mockInstrumento);
   });

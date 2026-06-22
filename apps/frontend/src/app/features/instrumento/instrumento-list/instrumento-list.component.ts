@@ -1,5 +1,5 @@
 import { Component, inject, OnInit, signal, computed } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { DatePipe, CurrencyPipe } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { InstrumentoDto } from '@luthiers/utils';
 import { InstrumentoService } from '../services/instrumento.service';
@@ -8,7 +8,7 @@ import { AuthService } from '../../auth/services/auth.service';
 @Component({
   selector: 'app-instrumento-list',
   standalone: true,
-  imports: [CommonModule, RouterLink],
+  imports: [DatePipe, CurrencyPipe, RouterLink],
   template: `
     <div class="container mx-auto p-4 max-w-6xl">
       <div class="flex justify-between items-center mb-6">
@@ -138,7 +138,10 @@ import { AuthService } from '../../auth/services/auth.service';
                   </h3>
                   <div class="mt-2">
                     <p class="text-sm text-gray-500">
-                      Tem certeza que deseja excluir o instrumento <strong *ngIf="itemToDelete() as item">{{ item.modeloMadeira }}</strong>? Esta ação não poderá ser desfeita.
+                      Tem certeza que deseja excluir o instrumento 
+                      @if (itemToDelete(); as item) {
+                        <strong>{{ item.modeloMadeira }}</strong>
+                      }? Esta ação não poderá ser desfeita.
                     </p>
                   </div>
                 </div>

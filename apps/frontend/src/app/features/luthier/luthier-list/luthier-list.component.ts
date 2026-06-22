@@ -1,5 +1,5 @@
 import { Component, inject, OnInit, signal, computed } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { DatePipe } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { LuthierDto } from '@luthiers/utils';
 import { LuthierService } from '../services/luthier.service';
@@ -8,7 +8,7 @@ import { AuthService } from '../../auth/services/auth.service';
 @Component({
   selector: 'app-luthier-list',
   standalone: true,
-  imports: [CommonModule, RouterLink],
+  imports: [DatePipe, RouterLink],
   template: `
     <div class="container mx-auto p-4 max-w-5xl">
       <div class="flex justify-between items-center mb-6">
@@ -130,7 +130,10 @@ import { AuthService } from '../../auth/services/auth.service';
                   </h3>
                   <div class="mt-2">
                     <p class="text-sm text-gray-500">
-                      Tem certeza que deseja excluir o luthier <strong *ngIf="luthierToDelete() as luthier">{{ luthier.nomeMestre }}</strong>? Esta ação não poderá ser desfeita.
+                      Tem certeza que deseja excluir o luthier 
+                      @if (luthierToDelete(); as luthier) {
+                        <strong>{{ luthier.nomeMestre }}</strong>
+                      }? Esta ação não poderá ser desfeita.
                     </p>
                   </div>
                 </div>

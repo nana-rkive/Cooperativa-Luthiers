@@ -3,21 +3,21 @@ import { InstrumentoOrmEntity } from '../../../../instrumento/infrastructure/per
 
 @Entity('luthier')
 export class LuthierOrmEntity {
-    @PrimaryGeneratedColumn()
-    id: number;
+  @PrimaryGeneratedColumn()
+  id: number;
 
-    @Column()
-    nomeMestre: string; // Ex: "João Silva"
+  @Column()
+  nomeMestre: string; // Ex: "João Silva"
 
-    @Column({ type: 'date' })
-    dataAbertura: Date; // Data de abertura da oficina
+  @Column({ type: 'date' })
+  dataAbertura: Date; // Data de abertura da oficina
 
-    @Column()
-    certificada: boolean; // Oficina certificada?
+  @Column()
+  certificada: boolean; // Oficina certificada?
 
-    @Column()
-    bancadasNum: number; // Mínimo 2 bancadas
+  @Column()
+  bancadasNum: number; // Mínimo 2 bancadas
 
-    @OneToMany(() => InstrumentoOrmEntity, (instrumento) => instrumento.luthier)
-    instrumentos: InstrumentoOrmEntity[]; // Relacionamento 1:N
+  @OneToMany(() => InstrumentoOrmEntity, (instrumento) => instrumento.luthier)
+  instrumentos: InstrumentoOrmEntity[]; // Relacionamento 1:N
 }

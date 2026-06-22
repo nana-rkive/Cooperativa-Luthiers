@@ -18,4 +18,4 @@ import { SeedModule } from './shared/seed/seed.module';
   controllers: [AppController],
   providers: [AppService],
 })
-export class AppModule { }
+export class AppModule {}

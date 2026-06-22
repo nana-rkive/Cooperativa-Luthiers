@@ -16,22 +16,22 @@ import type { JwtPayload } from '../../modules/usuario/application/usuario.servi
  */
 @Injectable()
 export class RolesGuard implements CanActivate {
-    constructor(private readonly reflector: Reflector) { }
+  constructor(private readonly reflector: Reflector) {}
 
-    canActivate(context: ExecutionContext): boolean {
-        const requiredRoles = this.reflector.getAllAndOverride<UsuarioRole[]>(ROLES_KEY, [
-            context.getHandler(),
-            context.getClass(),
-        ]);
+  canActivate(context: ExecutionContext): boolean {
+    const requiredRoles = this.reflector.getAllAndOverride<UsuarioRole[]>(
+      ROLES_KEY,
+      [context.getHandler(), context.getClass()],
+    );
 
-        // Sem @Roles() → qualquer usuário autenticado tem acesso
-        if (!requiredRoles || requiredRoles.length === 0) {
-            return true;
-        }
-
-        const request = context.switchToHttp().getRequest<{ user: JwtPayload }>();
-        const user = request.user;
-
-        return requiredRoles.includes(user?.role as UsuarioRole);
+    // Sem @Roles() → qualquer usuário autenticado tem acesso
+    if (!requiredRoles || requiredRoles.length === 0) {
+      return true;
     }
+
+    const request = context.switchToHttp().getRequest<{ user: JwtPayload }>();
+    const user = request.user;
+
+    return requiredRoles.includes(user?.role as UsuarioRole);
+  }
 }

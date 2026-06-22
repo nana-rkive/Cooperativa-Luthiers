@@ -1,215 +1,119 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="120" alt="Nest Logo" /></a>
-</p>
+# Cooperativa de Luthiers — Monorepo
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+Este repositório contém o sistema completo da **Cooperativa de Luthiers**, desenvolvido como parte da avaliação da 2ª VA de Programação Web I (UEG). O projeto utiliza uma arquitetura de monorepo moderna, estruturada com **pnpm workspaces** e orquestrada pelo **Turborepo**.
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg" alt="Donate us"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow" alt="Follow us on Twitter"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+---
 
-## Description
+## 📁 Estrutura do Monorepo
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+O monorepo está dividido em aplicações (`apps/`) e pacotes compartilhados (`packages/`):
 
-## Project setup
-
-```bash
-$ npm install
+```txt
+├── apps/
+│   ├── backend/           # API REST em NestJS 11 + TypeORM + SQLite
+│   └── frontend/          # SPA em Angular 20 + TailwindCSS + Signals
+├── packages/
+│   ├── eslint-config/     # Padrões estáticos de linting compartilhados
+│   ├── typescript-config/ # Configurações base do TypeScript
+│   └── utils/             # DTOs, payloads e tipos compartilhados
+├── pnpm-workspace.yaml    # Definição dos workspaces do pnpm
+├── turbo.json             # Pipelines de execução do Turborepo
+└── AGENT.md               # Guia de governança de IA para o repositório
 ```
 
-## Compile and run the project
+---
 
+## 🛠️ Tecnologias Utilizadas
+
+### Monorepo & Infraestrutura
+- **PNPM Workspaces** - Gerenciador de pacotes rápido e eficiente em espaço de disco.
+- **Turborepo** - Orquestrador de tarefas para otimizar builds, testes e execução simultânea.
+
+### Backend
+- **NestJS 11** - Framework Node.js progressivo para APIs eficientes e escaláveis.
+- **TypeORM** - ORM para TypeScript integrado com banco de dados.
+- **SQLite** - Banco de dados relacional em arquivo local (rápido e sem dependência de serviços externos).
+- **class-validator & class-transformer** - Validação rigorosa dos dados de entrada.
+- **Passport JWT** - Mecanismo seguro de autenticação.
+
+### Frontend
+- **Angular 20** - Plataforma estruturada com **Standalone Components** (sem NgModules).
+- **TailwindCSS** - Framework utilitário de CSS para design ágil e responsivo.
+- **Signals** - Controle de estado reativo e eficiente para gerenciar dados em memória.
+
+---
+
+## 🚀 Como Executar o Projeto
+
+Certifique-se de ter o **Node.js (>=20)** e o **pnpm** instalados.
+
+### 1. Instalar as dependências do Monorepo
+Na raiz do projeto, execute:
 ```bash
-# development
-$ npm run start
-
-# watch mode
-$ npm run start:dev
-
-# production mode
-$ npm run start:prod
+pnpm install
 ```
 
-## Run tests
-
+### 2. Executar em Modo de Desenvolvimento
+Para subir a API (backend) e a aplicação web (frontend) simultaneamente em modo watch:
 ```bash
-# unit tests
-$ npm run test
+pnpm dev
+```
+- **Frontend:** [http://localhost:4200](http://localhost:4200)
+- **Backend (API):** [http://localhost:3000](http://localhost:3000)
+- **Swagger Documentação:** [http://localhost:3000/api](http://localhost:3000/api)
 
-# e2e tests
-$ npm run test:e2e
+---
 
-# test coverage
-$ npm run test:cov
+## 🧪 Execução de Testes e Linting
+
+Todas as tarefas são otimizadas via Turborepo:
+
+### Executar a suíte de testes de todo o monorepo
+```bash
+pnpm test
 ```
 
-## Deployment
-
-When you're ready to deploy your NestJS application to production, there are some key steps you can take to ensure it runs as efficiently as possible. Check out the [deployment documentation](https://docs.nestjs.com/deployment) for more information.
-
-If you are looking for a cloud-based platform to deploy your NestJS application, check out [Mau](https://mau.nestjs.com), our official platform for deploying NestJS applications on AWS. Mau makes deployment straightforward and fast, requiring just a few simple steps:
-
+### Executar o analisador de código (Linter)
 ```bash
-$ npm install -g @nestjs/mau
-$ mau deploy
+pnpm lint
 ```
 
-With Mau, you can deploy your application in just a few clicks, allowing you to focus on building features rather than managing infrastructure.
+### Gerar os builds de produção
+```bash
+pnpm build
+```
 
-## Resources
+---
 
-Check out a few resources that may come in handy when working with NestJS:
+## 🔒 Arquitetura de Segurança & Fluxo de Auth
 
-- Visit the [NestJS Documentation](https://docs.nestjs.com) to learn more about the framework.
-- For questions and support, please visit our [Discord channel](https://discord.gg/G7Qnnhy).
-- To dive deeper and get more hands-on experience, check out our official video [courses](https://courses.nestjs.com/).
-- Deploy your application to AWS with the help of [NestJS Mau](https://mau.nestjs.com) in just a few clicks.
-- Visualize your application graph and interact with the NestJS application in real-time using [NestJS Devtools](https://devtools.nestjs.com).
-- Need help with your project (part-time to full-time)? Check out our official [enterprise support](https://enterprise.nestjs.com).
-- To stay in the loop and get updates, follow us on [X](https://x.com/nestframework) and [LinkedIn](https://linkedin.com/company/nestjs).
-- Looking for a job, or have a job to offer? Check out our official [Jobs board](https://jobs.nestjs.com).
+O sistema implementa autenticação via JWT com as seguintes características críticas:
 
-## Support
+1. **JWT Strictly In-Memory (Frontend):**
+   Conforme especificado na avaliação para evitar riscos de segurança (XSS), o token JWT **nunca** é persistido no `localStorage` ou `sessionStorage`. Ele é armazenado estritamente na memória volátil utilizando um **Signal** no `AuthService`. Ao atualizar a página (F5), a sessão é intencionalmente reiniciada e novo login é exigido.
+2. **HTTP Interceptor:**
+   Anexa automaticamente o cabeçalho `Authorization: Bearer <token>` em todas as chamadas HTTP e intercepta erros `401 Unauthorized`, limpando a sessão e redirecionando o usuário para `/login`.
+3. **Database Seed Idempotente:**
+   Na inicialização, o backend executa um seed automático para garantir que a conta administrativa inicial exista no banco de dados.
+   - **Administrador padrão:** `admin@ueg.br` | Senha: `admin123`
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
+---
 
-## Stay in touch
+## 💼 Regras de Negócio Implementadas
 
-- Author - [Kamil Myśliwiec](https://twitter.com/kammysliwiec)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
+Abaixo estão listadas as 11 regras de negócio validadas e testadas ativamente:
 
-## License
+### Entidade Luthier (Pai)
+1. **Campos Obrigatórios:** Todos os campos do cadastro de luthier são obrigatórios.
+2. **Mínimo de Bancadas:** O número de bancadas (`bancadasNum`) deve ser no mínimo 2.
+3. **Bancadas Inteiras:** O número de bancadas deve ser obrigatoriamente um número inteiro.
+4. **Nome Completo:** O campo `nomeMestre` deve conter obrigatoriamente nome e sobrenome.
+5. **Data Limite:** A data de abertura da oficina (`dataAbertura`) não pode ser futura.
+6. **Data Mínima:** A data de abertura da oficina não pode ser anterior a 1900.
 
-Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
-
-
-========================================================
-  COOPERATIVA DE LUTHIERS - API REST
-  Disciplina: Programação Web I - UEG
-========================================================
-
-DESCRIÇÃO DO PROJETO
---------------------
-API RESTful desenvolvida com NestJS, TypeORM e SQLite para
-gerenciar uma cooperativa de luthiers (artesãos de instrumentos
-musicais). O sistema controla oficinas de luthiers e os
-instrumentos em reparo nessas oficinas.
-
-Nome dos integrantes da dupla: Ana Laura Mesquita, Israel Pires
-TEMA: 7 - Cooperativa de Luthiers
-BANCO DE DADOS: SQLite (arquivo: data/cooperativa_luthiers.db)
-PORTA: 3000
-
-ENTIDADES
----------
-1. Luthier (Entidade Pai)
-   - id: número (gerado automaticamente)
-   - nomeMestre: texto (nome completo do mestre luthier)
-   - dataAbertura: data (data de abertura da oficina)
-   - certificada: booleano (se a oficina possui certificação)
-   - bancadasNum: número (quantidade de bancadas, mínimo 2)
-
-2. InstrumentoReparo (Entidade Filho)
-   - id: número (gerado automaticamente)
-   - modeloMadeira: texto (ex: "Violino Stradivarius")
-   - dataEntrada: data (data de entrada do instrumento)
-   - reparoConcluido: booleano (se o reparo foi concluído)
-   - custoReparo: número (custo em reais, de 0 a 50.000)
-   - luthierId: número (chave estrangeira para Luthier)
-
-COMO EXECUTAR
--------------
-1. Instalar dependências:
-   npm install
-
-2. Iniciar o servidor em modo desenvolvimento:
-   npm run start:dev
-
-3. Acessar a documentação Swagger no navegador:
-   http://localhost:3000/api
-
-ENDPOINTS - LUTHIERS
---------------------
-POST   /luthiers                      -> Cria um novo luthier
-GET    /luthiers                      -> Lista todos os luthiers
-GET    /luthiers/:id                  -> Busca luthier por ID
-GET    /luthiers/:id/com-instrumentos -> Busca luthier com seus instrumentos
-PUT    /luthiers/:id                  -> Atualiza dados do luthier
-PATCH  /luthiers/:id/deactivate       -> Desativa a certificação
-DELETE /luthiers/:id                  -> Remove um luthier
-
-ENDPOINTS - INSTRUMENTOS
-------------------------
-POST   /instrumentos                  -> Registra instrumento para reparo
-GET    /instrumentos                  -> Lista todos os instrumentos
-GET    /instrumentos/:id              -> Busca instrumento por ID
-PATCH  /instrumentos/:id/concluir     -> Marca reparo como concluído
-DELETE /instrumentos/:id              -> Remove registro de instrumento
-
-VALIDAÇÕES DE NEGÓCIO IMPLEMENTADAS
-------------------------------------
-Luthier (Service):
-  1. Todos os campos são obrigatórios
-  2. bancadasNum deve ser no mínimo 2
-  3. bancadasNum deve ser número inteiro
-  4. nomeMestre deve conter nome e sobrenome
-  5. dataAbertura não pode ser data futura
-  6. dataAbertura não pode ser anterior a 1900
-
-InstrumentoReparo (Service):
-  7. luthierId referenciado deve existir (integridade de FK)
-  8. dataEntrada não pode ser anterior à dataAbertura da oficina
-  9. custoReparo deve estar entre R$ 0 e R$ 50.000
- 10. Se reparoConcluido = true, custoReparo deve ser maior que 0
- 11. Não é permitido duplicar modeloMadeira em reparo no mesmo luthier
-
-ARQUITETURA
------------
-O projeto segue a Arquitetura Hexagonal (Ports and Adapters):
-
-src/
-  modules/
-    luthier/
-      domain/            -> Classe de domínio Luthier
-      application/       -> Service + Interface (Port)
-        ports/
-      infrastructure/
-        persistence/
-          typeorm/       -> ORM Entity + Repository (Adapter)
-      presentation/      -> Controller + DTO
-        dto/
-    instrumento/
-      domain/
-      application/
-        ports/
-      infrastructure/
-        persistence/
-          typeorm/
-      presentation/
-        dto/
-  shared/
-    database/            -> Configuração do TypeORM/SQLite
-    filters/             -> Filtro global de exceções
-
-TECNOLOGIAS
------------
-- NestJS 11
-- TypeORM 0.3
-- SQLite3
-- class-validator / class-transformer
-- @nestjs/swagger
+### Entidade Instrumento (Filho)
+7. **Integridade de FK:** O `luthierId` referenciado na entrada do instrumento deve existir no sistema.
+8. **Validação de Cronologia:** A data de entrada do instrumento (`dataEntrada`) não pode ser anterior à data de abertura da oficina do luthier responsável.
+9. **Limite de Custo:** O custo do reparo (`custoReparo`) deve estar estritamente entre R$ 0 e R$ 50.000.
+10. **Condicional de Conclusão:** Se o reparo for marcado como concluído (`reparoConcluido = true`), o custo do reparo deve ser estritamente maior que zero.
+11. **Modelo Único em Reparo:** Não é permitido duplicar o `modeloMadeira` de instrumento em reparo simultâneo na mesma oficina (para o mesmo luthier).

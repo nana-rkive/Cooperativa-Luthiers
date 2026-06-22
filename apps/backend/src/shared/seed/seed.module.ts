@@ -9,7 +9,7 @@ import { UsuarioModule } from 'src/modules/usuario/usuario.module';
  * Não re-importamos UsuarioModule aqui para evitar duplicidade de providers.
  */
 @Module({
-    imports: [UsuarioModule],
-    providers: [SeedService],
+  imports: [UsuarioModule],
+  providers: [SeedService],
 })
-export class SeedModule { }
+export class SeedModule {}

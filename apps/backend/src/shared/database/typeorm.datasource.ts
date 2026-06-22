@@ -5,10 +5,9 @@ import { LuthierOrmEntity } from '../../modules/luthier/infrastructure/persisten
 import { UsuarioOrmEntity } from '../../modules/usuario/infrastructure/persistence/typeorm/usuario.orm-entity';
 import * as path from 'path';
 
-
 export const AppDataSource = new DataSource({
-    type: 'sqlite',
-    database: path.resolve(__dirname, 'data/cooperativa_luthieres.db'),
-    entities: [InstrumentoOrmEntity, LuthierOrmEntity, UsuarioOrmEntity],
-    synchronize: true,
-}) 
+  type: 'sqlite',
+  database: path.resolve(__dirname, 'data/cooperativa_luthieres.db'),
+  entities: [InstrumentoOrmEntity, LuthierOrmEntity, UsuarioOrmEntity],
+  synchronize: true,
+});

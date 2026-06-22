@@ -7,17 +7,17 @@ import { LuthierTypeOrmRepository } from './infrastructure/persistence/typeorm/l
 import { UsuarioModule } from '../usuario/usuario.module';
 
 @Module({
-    imports: [
-        TypeOrmModule.forFeature([LuthierOrmEntity]),
-        UsuarioModule, // fornece PassportModule, JwtModule e JwtStrategy para os guards
-    ],
-    controllers: [LuthierController],
-    providers: [
-        LuthierService,
-        {
-            provide: 'LuthierRepositoryPort',
-            useClass: LuthierTypeOrmRepository,
-        },
-    ],
+  imports: [
+    TypeOrmModule.forFeature([LuthierOrmEntity]),
+    UsuarioModule, // fornece PassportModule, JwtModule e JwtStrategy para os guards
+  ],
+  controllers: [LuthierController],
+  providers: [
+    LuthierService,
+    {
+      provide: 'LuthierRepositoryPort',
+      useClass: LuthierTypeOrmRepository,
+    },
+  ],
 })
-export class LuthierModule { }
+export class LuthierModule {}

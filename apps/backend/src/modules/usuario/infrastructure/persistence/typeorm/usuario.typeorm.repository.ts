@@ -7,75 +7,75 @@ import { UsuarioOrmEntity } from './usuario.orm-entity';
 
 @Injectable()
 export class UsuarioTypeOrmRepository implements UsuarioRepositoryPort {
-    constructor(
-        @InjectRepository(UsuarioOrmEntity)
-        private readonly repo: Repository<UsuarioOrmEntity>,
-    ) { }
+  constructor(
+    @InjectRepository(UsuarioOrmEntity)
+    private readonly repo: Repository<UsuarioOrmEntity>,
+  ) {}
 
-    async create(usuario: Usuario): Promise<Usuario> {
-        const orm = this.repo.create({
-            primeiroNome: usuario.primeiroNome,
-            sobrenome: usuario.sobrenome,
-            email: usuario.email,
-            senha: usuario.senha,
-            ativo: usuario.ativo,
-            role: usuario.role,
-            tokenAtivacao: usuario.tokenAtivacao,
-        });
-        const saved = await this.repo.save(orm);
-        return this.toDomain(saved);
-    }
+  async create(usuario: Usuario): Promise<Usuario> {
+    const orm = this.repo.create({
+      primeiroNome: usuario.primeiroNome,
+      sobrenome: usuario.sobrenome,
+      email: usuario.email,
+      senha: usuario.senha,
+      ativo: usuario.ativo,
+      role: usuario.role,
+      tokenAtivacao: usuario.tokenAtivacao,
+    });
+    const saved = await this.repo.save(orm);
+    return this.toDomain(saved);
+  }
 
-    async findAll(): Promise<Usuario[]> {
-        const items = await this.repo.find({ order: { id: 'ASC' } });
-        return items.map(this.toDomain);
-    }
+  async findAll(): Promise<Usuario[]> {
+    const items = await this.repo.find({ order: { id: 'ASC' } });
+    return items.map(this.toDomain);
+  }
 
-    async findByEmail(email: string): Promise<Usuario | null> {
-        const found = await this.repo.findOneBy({ email });
-        return found ? this.toDomain(found) : null;
-    }
+  async findByEmail(email: string): Promise<Usuario | null> {
+    const found = await this.repo.findOneBy({ email });
+    return found ? this.toDomain(found) : null;
+  }
 
-    async findById(id: number): Promise<Usuario | null> {
-        const found = await this.repo.findOneBy({ id });
-        return found ? this.toDomain(found) : null;
-    }
+  async findById(id: number): Promise<Usuario | null> {
+    const found = await this.repo.findOneBy({ id });
+    return found ? this.toDomain(found) : null;
+  }
 
-    async findByTokenAtivacao(token: string): Promise<Usuario | null> {
-        const found = await this.repo.findOneBy({ tokenAtivacao: token });
-        return found ? this.toDomain(found) : null;
-    }
+  async findByTokenAtivacao(token: string): Promise<Usuario | null> {
+    const found = await this.repo.findOneBy({ tokenAtivacao: token });
+    return found ? this.toDomain(found) : null;
+  }
 
-    async update(usuario: Usuario): Promise<Usuario> {
-        const orm = await this.repo.findOneBy({ id: usuario.id! });
-        if (!orm) throw new Error('Usuário não encontrado');
+  async update(usuario: Usuario): Promise<Usuario> {
+    const orm = await this.repo.findOneBy({ id: usuario.id! });
+    if (!orm) throw new Error('Usuário não encontrado');
 
-        orm.primeiroNome = usuario.primeiroNome;
-        orm.sobrenome = usuario.sobrenome;
-        orm.email = usuario.email;
-        orm.senha = usuario.senha;
-        orm.ativo = usuario.ativo;
-        orm.role = usuario.role;
-        orm.tokenAtivacao = usuario.tokenAtivacao;
+    orm.primeiroNome = usuario.primeiroNome;
+    orm.sobrenome = usuario.sobrenome;
+    orm.email = usuario.email;
+    orm.senha = usuario.senha;
+    orm.ativo = usuario.ativo;
+    orm.role = usuario.role;
+    orm.tokenAtivacao = usuario.tokenAtivacao;
 
-        const saved = await this.repo.save(orm);
-        return this.toDomain(saved);
-    }
+    const saved = await this.repo.save(orm);
+    return this.toDomain(saved);
+  }
 
-    async delete(id: number): Promise<void> {
-        await this.repo.delete({ id });
-    }
+  async delete(id: number): Promise<void> {
+    await this.repo.delete({ id });
+  }
 
-    private toDomain = (orm: UsuarioOrmEntity): Usuario => {
-        return new Usuario(
-            orm.id,
-            orm.primeiroNome,
-            orm.sobrenome,
-            orm.email,
-            orm.senha,
-            orm.ativo,
-            orm.role,
-            orm.tokenAtivacao,
-        );
-    };
+  private toDomain = (orm: UsuarioOrmEntity): Usuario => {
+    return new Usuario(
+      orm.id,
+      orm.primeiroNome,
+      orm.sobrenome,
+      orm.email,
+      orm.senha,
+      orm.ativo,
+      orm.role,
+      orm.tokenAtivacao,
+    );
+  };
 }

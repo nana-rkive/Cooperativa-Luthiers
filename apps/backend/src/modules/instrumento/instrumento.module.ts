@@ -9,21 +9,21 @@ import { LuthierTypeOrmRepository } from '../luthier/infrastructure/persistence/
 import { UsuarioModule } from '../usuario/usuario.module';
 
 @Module({
-    imports: [
-        TypeOrmModule.forFeature([InstrumentoOrmEntity, LuthierOrmEntity]),
-        UsuarioModule, // fornece PassportModule, JwtModule e JwtStrategy para os guards
-    ],
-    controllers: [InstrumentoController],
-    providers: [
-        InstrumentoService,
-        {
-            provide: 'InstrumentoRepositoryPort',
-            useClass: InstrumentoTypeOrmRepository,
-        },
-        {
-            provide: 'LuthierRepositoryPort',
-            useClass: LuthierTypeOrmRepository,
-        },
-    ],
+  imports: [
+    TypeOrmModule.forFeature([InstrumentoOrmEntity, LuthierOrmEntity]),
+    UsuarioModule, // fornece PassportModule, JwtModule e JwtStrategy para os guards
+  ],
+  controllers: [InstrumentoController],
+  providers: [
+    InstrumentoService,
+    {
+      provide: 'InstrumentoRepositoryPort',
+      useClass: InstrumentoTypeOrmRepository,
+    },
+    {
+      provide: 'LuthierRepositoryPort',
+      useClass: LuthierTypeOrmRepository,
+    },
+  ],
 })
-export class InstrumentoModule { }
+export class InstrumentoModule {}

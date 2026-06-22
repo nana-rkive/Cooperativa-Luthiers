@@ -14,6 +14,7 @@ export class AuthService {
   readonly jwtToken = signal<string | null>(null);
   readonly currentUser = signal<AuthResponseDto['usuario'] | null>(null);
   readonly isAdmin = computed(() => this.currentUser()?.role === 'admin');
+  readonly isLuthier = computed(() => this.currentUser()?.role === 'luthier' || this.currentUser()?.role === 'admin');
 
   login(credentials: LoginDto): Observable<AuthResponseDto> {
     return this.http.post<AuthResponseDto>(`${environment.apiUrl}/auth/login`, credentials).pipe(

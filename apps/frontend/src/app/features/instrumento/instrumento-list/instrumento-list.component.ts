@@ -19,7 +19,7 @@ import { AuthService } from '../../auth/services/auth.service';
           </a>
           <h1 class="text-3xl font-bold text-gray-800">Instrumentos em Manutenção</h1>
         </div>
-        @if (authService.isAdmin()) {
+        @if (authService.isLuthier()) {
           <a routerLink="/instrumentos/novo" class="bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-lg shadow transition-colors">
             Novo Registro
           </a>
@@ -68,7 +68,7 @@ import { AuthService } from '../../auth/services/auth.service';
                   <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Custo (R$)</th>
                   <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Data Entrada</th>
                   <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
-                  @if (authService.isAdmin()) {
+                  @if (authService.isLuthier()) {
                     <th scope="col" class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Ações</th>
                   }
                 </tr>
@@ -101,7 +101,7 @@ import { AuthService } from '../../auth/services/auth.service';
                         </span>
                       }
                     </td>
-                    @if (authService.isAdmin()) {
+                    @if (authService.isLuthier()) {
                       <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                         <a [routerLink]="['/instrumentos', item.id, 'editar']" class="text-indigo-600 hover:text-indigo-900 mr-4">Editar</a>
                         <button (click)="confirmDelete(item)" class="text-red-600 hover:text-red-900">Excluir</button>

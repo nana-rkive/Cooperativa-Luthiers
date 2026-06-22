@@ -13,7 +13,7 @@ import { AuthService } from '../auth/services/auth.service';
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div class="flex justify-between items-center h-16">
             <div class="flex items-center">
-              <span class="text-2xl font-bold text-blue-600">LuthiersApp</span>
+              <span class="text-2xl font-bold text-blue-600">Cooperativa de Luthiers</span>
             </div>
             
             <div class="flex items-center space-x-4">
@@ -31,7 +31,7 @@ import { AuthService } from '../auth/services/auth.service';
       </header>
 
       <main class="max-w-7xl mx-auto py-10 px-4 sm:px-6 lg:px-8">
-        <div class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 items-stretch">
+        <div class="grid grid-cols-1 gap-6 items-stretch" [class.md:grid-cols-3]="authService.isAdmin()" [class.md:grid-cols-2]="!authService.isAdmin()">
           <!-- Cards de Navegação Rápida -->
           
           <a routerLink="/luthiers" class="bg-white overflow-hidden shadow rounded-lg hover:shadow-md transition-shadow cursor-pointer border border-gray-100 flex flex-col h-full min-h-[8rem]">
@@ -66,7 +66,7 @@ import { AuthService } from '../auth/services/auth.service';
             </div>
           </a>
 
-          @if (authService.currentUser()?.role === 'admin') {
+          @if (authService.isAdmin()) {
             <a routerLink="/admin/users" class="bg-white overflow-hidden shadow rounded-lg hover:shadow-md transition-shadow cursor-pointer border border-gray-100 flex flex-col h-full min-h-[8rem]">
               <div class="p-6 flex-1 flex items-center gap-4">
                 <div class="flex-shrink-0 bg-purple-100 rounded-md p-3">

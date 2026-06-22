@@ -24,7 +24,7 @@ export class InstrumentoService {
   }
 
   update(id: number, data: UpdateInstrumentoDto): Observable<InstrumentoDto> {
-    return this.http.patch<InstrumentoDto>(`${this.apiUrl}/${id}`, data);
+    return this.http.put<InstrumentoDto>(`${this.apiUrl}/${id}`, data);
   }
 
   delete(id: number): Observable<void> {

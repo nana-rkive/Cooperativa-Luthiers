@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Param, Post, Patch, UseGuards } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Post, Patch, Put, UseGuards } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiParam, ApiBody, ApiBearerAuth, ApiResponse } from '@nestjs/swagger';
 import { InstrumentoService } from '../application/instrumento.service';
 import { CreateInstrumentoDto } from './dto/create-instrumento.dto';
@@ -22,6 +22,19 @@ export class InstrumentoController {
     @ApiResponse({ status: 403, description: 'Sem permissão.' })
     create(@Body() dto: CreateInstrumentoDto) {
         return this.instrumentoService.create(dto.modeloMadeira, dto.dataEntrada, dto.reparoConcluido, dto.custoReparo, dto.luthierId);
+    }
+
+    @Put(':id')
+    @Roles('admin', 'luthier')
+    @ApiParam({ name: 'id', example: 1, description: 'ID do instrumento' })
+    @ApiOperation({ summary: 'Atualiza os dados de um instrumento' })
+    @ApiBody({ type: CreateInstrumentoDto })
+    @ApiResponse({ status: 200, description: 'Instrumento atualizado com sucesso.' })
+    @ApiResponse({ status: 401, description: 'Não autenticado.' })
+    @ApiResponse({ status: 403, description: 'Sem permissão.' })
+    @ApiResponse({ status: 404, description: 'Instrumento não encontrado.' })
+    update(@Param('id') id: string, @Body() dto: CreateInstrumentoDto) {
+        return this.instrumentoService.update(Number(id), dto.modeloMadeira, dto.dataEntrada, dto.reparoConcluido, dto.custoReparo, dto.luthierId);
     }
 
     @Get()

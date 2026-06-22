@@ -58,6 +58,54 @@ export class InstrumentoService {
         return this.instrumentoRepo.create(instrumento);
     }
 
+    async update(
+        id: number,
+        modeloMadeira: string,
+        dataEntrada: Date,
+        reparoConcluido: boolean,
+        custoReparo: number,
+        luthierId: number
+    ): Promise<Instrumento> {
+        const instrumento = await this.instrumentoRepo.findById(id);
+        if (!instrumento) throw new BusinessException('INSTRUMENTO_006', 'Registro de instrumento não encontrado.', HttpStatus.NOT_FOUND);
+
+        const luthier = await this.luthierRepo.findById(luthierId);
+        if (!luthier) {
+            throw new BusinessException('INSTRUMENTO_001', `Oficina de Luthier com ID ${luthierId} não encontrada.`, HttpStatus.NOT_FOUND);
+        }
+
+        if (new Date(dataEntrada) < new Date(luthier.dataAbertura)) {
+            throw new BusinessException('INSTRUMENTO_002', 'A data de entrada do instrumento não pode ser anterior à abertura da oficina.');
+        }
+
+        if (custoReparo < 0 || custoReparo > 50000) {
+            throw new BusinessException('INSTRUMENTO_003', 'O custo do reparo deve ser entre R$ 0,00 e R$ 50.000,00.');
+        }
+
+        if (reparoConcluido && custoReparo <= 0) {
+            throw new BusinessException('INSTRUMENTO_004', 'Um reparo concluído exige um custo de manutenção maior que zero.');
+        }
+
+        const todos = await this.instrumentoRepo.findAll();
+        const duplicado = todos.find(i =>
+            i.id !== id &&
+            i.modeloMadeira === modeloMadeira &&
+            i.reparoConcluido === false &&
+            i.luthierId === luthierId
+        );
+        if (duplicado) {
+            throw new BusinessException('INSTRUMENTO_005', 'Este luthier já possui um instrumento deste modelo em reparo no momento.', HttpStatus.CONFLICT);
+        }
+
+        instrumento.modeloMadeira = modeloMadeira;
+        instrumento.dataEntrada = dataEntrada;
+        instrumento.reparoConcluido = reparoConcluido;
+        instrumento.custoReparo = custoReparo;
+        instrumento.luthierId = luthierId;
+
+        return this.instrumentoRepo.update(instrumento);
+    }
+
     async findAll(): Promise<Instrumento[]> {
         return this.instrumentoRepo.findAll();
     }

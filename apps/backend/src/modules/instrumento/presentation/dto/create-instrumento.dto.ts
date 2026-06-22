@@ -1,4 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
+import { Type } from 'class-transformer';
 import {
   IsNotEmpty,
   IsNumber,
@@ -6,7 +7,8 @@ import {
   Min,
   Max,
   IsString,
-  IsDateString,
+  IsDate,
+  MaxDate,
 } from 'class-validator';
 
 export class CreateInstrumentoDto {
@@ -22,8 +24,10 @@ export class CreateInstrumentoDto {
     description: 'Data de entrada do instrumento na oficina',
     example: '2022-01-01',
   })
-  @IsDateString()
+  @Type(() => Date)
+  @IsDate({ message: 'Formato de data inválido' })
   @IsNotEmpty({ message: 'A data de entrada é obrigatória' })
+  @MaxDate(new Date(), { message: 'A data de entrada não pode ser no futuro' })
   dataEntrada: Date;
 
   @ApiProperty({ description: 'Status do reparo', example: false })

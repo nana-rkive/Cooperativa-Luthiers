@@ -20,6 +20,12 @@ import { NgClass } from '@angular/common';
         </div>
       }
 
+      @if (successMessage()) {
+        <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative mb-4 text-center font-medium">
+          {{ successMessage() }}
+        </div>
+      }
+
       <form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
         <div class="mb-4 flex gap-4">
           <div class="w-1/2">
@@ -114,6 +120,7 @@ export class RegisterComponent {
 
   loading = signal(false);
   globalError = signal<string | null>(null);
+  successMessage = signal<string | null>(null);
 
   onSubmit(): void {
     if (this.registerForm.invalid) {
@@ -123,6 +130,7 @@ export class RegisterComponent {
 
     this.loading.set(true);
     this.globalError.set(null);
+    this.successMessage.set(null);
     
     // reset external backend errors
     Object.keys(this.registerForm.controls).forEach(key => {
@@ -139,7 +147,10 @@ export class RegisterComponent {
     this.authService.register(data).subscribe({
       next: () => {
         this.loading.set(false);
-        this.router.navigate(['/dashboard']);
+        this.successMessage.set('Cadastro realizado! Aguardando ativação da conta.');
+        setTimeout(() => {
+          this.router.navigate(['/login']);
+        }, 3500);
       },
       error: (err) => {
         this.loading.set(false);

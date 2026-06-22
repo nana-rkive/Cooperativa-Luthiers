@@ -81,6 +81,7 @@ import { parseAuthError } from '../../../core/utils/auth-error.util';
                   type="date" 
                   id="dataEntrada" 
                   formControlName="dataEntrada"
+                  [max]="dataAtual"
                   class="w-full px-3 py-2 border rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
                   [ngClass]="{'border-red-500': fieldHasError('dataEntrada'), 'border-gray-300': !fieldHasError('dataEntrada')}"
                 >
@@ -170,6 +171,8 @@ export class InstrumentoFormComponent implements OnInit {
   saving = signal<boolean>(false);
   globalError = signal<string | null>(null);
 
+  dataAtual = new Date().toISOString().split('T')[0];
+
   ngOnInit(): void {
     const idParam = this.route.snapshot.paramMap.get('id');
     if (idParam) {
@@ -252,12 +255,14 @@ export class InstrumentoFormComponent implements OnInit {
       },
       error: (err) => {
         this.saving.set(false);
-        const parsedErrors = parseAuthError(err);
         
-        if (parsedErrors['global']) {
-          this.globalError.set(parsedErrors['global']);
+        if (err.error && err.error.message) {
+          this.globalError.set(Array.isArray(err.error.message) ? err.error.message[0] : err.error.message);
+        } else {
+          this.globalError.set('Erro de validação');
         }
         
+        const parsedErrors = parseAuthError(err);
         Object.keys(parsedErrors).forEach(field => {
           if (field !== 'global' && this.form.contains(field)) {
             this.form.get(field)?.setErrors({ backend: parsedErrors[field] });

@@ -107,7 +107,7 @@ export class InstrumentoController {
   }
 
   @Delete(':id')
-  @Roles('admin')
+  @Roles('admin', 'luthier')
   @ApiParam({ name: 'id', example: 1 })
   @ApiOperation({ summary: 'Remove o registro de um instrumento' })
   @ApiResponse({
@@ -117,7 +117,7 @@ export class InstrumentoController {
   @ApiResponse({ status: 401, description: 'Não autenticado.' })
   @ApiResponse({
     status: 403,
-    description: 'Sem permissão — requer role admin.',
+    description: 'Sem permissão — requer role admin ou luthier.',
   })
   delete(@Param('id') id: string) {
     return this.instrumentoService.delete(Number(id));

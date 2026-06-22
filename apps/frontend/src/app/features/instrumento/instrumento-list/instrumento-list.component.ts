@@ -37,6 +37,17 @@ import { AuthService } from '../../auth/services/auth.service';
         </div>
       }
 
+      <!-- Delete Error State -->
+      @if (deleteError()) {
+        <div class="bg-red-100 border-l-4 border-red-500 text-red-700 p-4 mb-6 rounded shadow-sm" role="alert">
+          <p class="font-bold">Aviso</p>
+          <p>{{ deleteError() }}</p>
+          <button (click)="deleteError.set(null)" class="mt-2 text-sm underline text-red-800 hover:text-red-900">
+            Dispensar
+          </button>
+        </div>
+      }
+
       <!-- Loading State -->
       @if (loading()) {
         <div class="flex justify-center items-center py-20">
@@ -168,6 +179,7 @@ export class InstrumentoListComponent implements OnInit {
   data = signal<InstrumentoDto[]>([]);
   loading = signal<boolean>(true);
   error = signal<string | null>(null);
+  deleteError = signal<string | null>(null);
   
   isEmpty = computed(() => this.data().length === 0);
 
@@ -181,6 +193,7 @@ export class InstrumentoListComponent implements OnInit {
   loadInstrumentos(): void {
     this.loading.set(true);
     this.error.set(null);
+    this.deleteError.set(null);
     
     this.instrumentoService.getAll().subscribe({
       next: (instrumentos) => {
@@ -196,6 +209,7 @@ export class InstrumentoListComponent implements OnInit {
 
   confirmDelete(item: InstrumentoDto): void {
     this.itemToDelete.set(item);
+    this.deleteError.set(null);
   }
 
   cancelDelete(): void {
@@ -209,6 +223,7 @@ export class InstrumentoListComponent implements OnInit {
     if (!target) return;
 
     this.deleting.set(true);
+    this.deleteError.set(null);
     this.instrumentoService.delete(target.id).subscribe({
       next: () => {
         this.data.update(list => list.filter(item => item.id !== target.id));
@@ -218,7 +233,7 @@ export class InstrumentoListComponent implements OnInit {
       error: () => {
         this.deleting.set(false);
         this.itemToDelete.set(null);
-        this.error.set('Não foi possível excluir o instrumento selecionado.');
+        this.deleteError.set('Não foi possível excluir o instrumento selecionado.');
       }
     });
   }

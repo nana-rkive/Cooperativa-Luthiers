@@ -40,6 +40,8 @@ export class AllExceptionFilter implements ExceptionFilter {
         message = Array.isArray(bodyObj.message) ? 'Erro de validação' : (bodyObj.message || message);
         if (Array.isArray(bodyObj.message)) {
           details = bodyObj.message;
+        } else if (bodyObj.errors) {
+          details = bodyObj.errors;
         }
       } else if (typeof body === 'string') {
         message = body;

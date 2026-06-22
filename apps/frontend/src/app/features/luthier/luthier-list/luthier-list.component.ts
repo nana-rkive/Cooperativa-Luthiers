@@ -11,7 +11,13 @@ import { LuthierService } from '../services/luthier.service';
   template: `
     <div class="container mx-auto p-4 max-w-5xl">
       <div class="flex justify-between items-center mb-6">
-        <h1 class="text-3xl font-bold text-gray-800">Mestres Luthiers</h1>
+        <div class="flex items-center gap-4">
+          <a routerLink="/dashboard" class="flex items-center text-gray-600 hover:text-blue-600 transition-colors font-medium">
+            <svg class="w-5 h-5 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
+            Voltar
+          </a>
+          <h1 class="text-3xl font-bold text-gray-800">Mestres Luthiers</h1>
+        </div>
         <a routerLink="/luthiers/novo" class="bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-lg shadow transition-colors">
           Novo Luthier
         </a>

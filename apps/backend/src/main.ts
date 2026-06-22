@@ -1,6 +1,6 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
-import { ValidationPipe } from '@nestjs/common';
+import { ValidationPipe, BadRequestException } from '@nestjs/common';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { AllExceptionFilter } from './shared/filters/all-exceptions.filter';
 
@@ -8,7 +8,17 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   app.enableCors();
   app.useGlobalFilters(new AllExceptionFilter());
-  app.useGlobalPipes(new ValidationPipe({ whitelist: true, forbidNonWhitelisted: true }));
+  app.useGlobalPipes(new ValidationPipe({
+    whitelist: true,
+    forbidNonWhitelisted: true,
+    exceptionFactory: (validationErrors = []) => {
+      const errors = validationErrors.reduce((acc, error) => {
+        acc[error.property] = Object.values(error.constraints || {});
+        return acc;
+      }, {} as Record<string, string[]>);
+      return new BadRequestException({ statusCode: 400, message: 'Erro de validação', errors });
+    },
+  }));
 
   const config = new DocumentBuilder()
     .setTitle('Cooperativa de Luthiers')

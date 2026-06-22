@@ -29,10 +29,10 @@
     "@angular/forms": "^20.3.0",
     "@angular/platform-browser": "^20.3.0",
     "@angular/router": "^20.3.0",
+    "@luthiers/utils": "workspace:*",
     "rxjs": "~7.8.0",
     "tslib": "^2.3.0",
-    "zone.js": "~0.15.0",
-    "@luthiers/utils": "workspace:*"
+    "zone.js": "~0.15.0"
   },
   "devDependencies": {
     "@angular/build": "^20.3.29",
@@ -47,7 +47,7 @@
     "karma-jasmine": "~5.1.0",
     "karma-jasmine-html-reporter": "~2.1.0",
     "postcss": "^8.5.15",
-    "tailwindcss": "^4.3.1",
+    "tailwindcss": "^3.4.17",
     "typescript": "~5.9.2"
   }
 }

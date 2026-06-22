@@ -19,17 +19,31 @@ import { CommonModule } from '@angular/common';
       </div>
 
       <form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
-        <div class="mb-4">
-          <label class="block text-gray-700 text-sm font-bold mb-2" for="nome">Nome</label>
-          <input 
-            class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" 
-            [ngClass]="{'border-red-500': fieldHasError('nome')}"
-            id="nome" 
-            type="text" 
-            formControlName="nome">
-          <p *ngIf="fieldHasError('nome')" class="text-red-500 text-xs italic mt-1">
-            {{ getFieldError('nome') }}
-          </p>
+        <div class="mb-4 flex gap-4">
+          <div class="w-1/2">
+            <label class="block text-gray-700 text-sm font-bold mb-2" for="primeiroNome">Nome</label>
+            <input 
+              class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" 
+              [ngClass]="{'border-red-500': fieldHasError('primeiroNome')}"
+              id="primeiroNome" 
+              type="text" 
+              formControlName="primeiroNome">
+            <p *ngIf="fieldHasError('primeiroNome')" class="text-red-500 text-xs italic mt-1">
+              {{ getFieldError('primeiroNome') }}
+            </p>
+          </div>
+          <div class="w-1/2">
+            <label class="block text-gray-700 text-sm font-bold mb-2" for="sobrenome">Sobrenome</label>
+            <input 
+              class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" 
+              [ngClass]="{'border-red-500': fieldHasError('sobrenome')}"
+              id="sobrenome" 
+              type="text" 
+              formControlName="sobrenome">
+            <p *ngIf="fieldHasError('sobrenome')" class="text-red-500 text-xs italic mt-1">
+              {{ getFieldError('sobrenome') }}
+            </p>
+          </div>
         </div>
 
         <div class="mb-4">
@@ -82,9 +96,10 @@ export class RegisterComponent {
   private router = inject(Router);
 
   registerForm = this.fb.group({
-    nome: ['', Validators.required],
+    primeiroNome: ['', Validators.required],
+    sobrenome: ['', Validators.required],
     email: ['', [Validators.required, Validators.email]],
-    senha: ['', [Validators.required, Validators.minLength(6)]]
+    senha: ['', [Validators.required, Validators.minLength(8), Validators.pattern(/.*[A-Z].*/)]]
   });
 
   loading = signal(false);
@@ -142,7 +157,8 @@ export class RegisterComponent {
     
     if (control.hasError('required')) return 'Campo obrigatório';
     if (control.hasError('email')) return 'E-mail inválido';
-    if (control.hasError('minlength')) return 'Senha deve ter no mínimo 6 caracteres';
+    if (control.hasError('minlength')) return 'A senha deve ter no mínimo 8 caracteres';
+    if (control.hasError('pattern')) return 'A senha deve conter pelo menos uma letra maiúscula';
     if (control.hasError('backend')) return control.getError('backend');
     
     return 'Campo inválido';

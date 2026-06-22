@@ -3,7 +3,6 @@ import { HttpTestingController, provideHttpClientTesting } from '@angular/common
 import { provideHttpClient } from '@angular/common/http';
 import { AuthService } from './auth.service';
 import { environment } from '../../../../environments/environment';
-import { describe, it, expect, beforeEach, afterEach } from 'vitest';
 import { AuthResponseDto, LoginDto } from '@luthiers/utils';
 
 describe('AuthService', () => {
@@ -31,7 +30,7 @@ describe('AuthService', () => {
   });
 
   it('should update signals on successful login', () => {
-    const loginDto: LoginDto = { email: 'test@test.com', password: 'password' };
+    const loginDto: LoginDto = { email: 'test@test.com', senha: 'password' };
     const mockResponse: AuthResponseDto = {
       accessToken: 'mock-jwt-token',
       usuario: { id: '1', email: 'test@test.com', nome: 'Test User', roles: ['user'] }

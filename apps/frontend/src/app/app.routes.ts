@@ -48,7 +48,7 @@ export const routes: Routes = [
     loadComponent: () => import('./features/instrumento/instrumento-form/instrumento-form.component').then(c => c.InstrumentoFormComponent)
   },
   {
-    path: 'admin',
+    path: 'admin/users',
     canActivate: [authGuard, adminGuard],
     loadComponent: () => import('./features/admin/admin-users.component').then(c => c.AdminUsersComponent)
   }

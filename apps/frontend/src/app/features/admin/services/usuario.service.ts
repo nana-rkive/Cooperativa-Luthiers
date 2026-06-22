@@ -16,4 +16,8 @@ export class UsuarioService {
   toggleActive(id: number, ativo: boolean): Observable<void> {
     return this.http.put<void>(`${this.apiUrl}/${id}`, { ativo });
   }
+
+  deleteUser(id: string | number): Observable<void> {
+    return this.http.delete<void>(`${this.apiUrl}/${id}`);
+  }
 }

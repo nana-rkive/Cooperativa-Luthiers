@@ -1,4 +1,4 @@
-import { Injectable, signal, inject } from '@angular/core';
+import { Injectable, signal, computed, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, tap } from 'rxjs';
 import { AuthResponseDto, LoginDto, RegisterDto } from '@luthiers/utils';
@@ -13,6 +13,7 @@ export class AuthService {
   // Token JWT mantido estritamente em memória via Signal
   readonly jwtToken = signal<string | null>(null);
   readonly currentUser = signal<AuthResponseDto['usuario'] | null>(null);
+  readonly isAdmin = computed(() => this.currentUser()?.role === 'admin');
 
   login(credentials: LoginDto): Observable<AuthResponseDto> {
     return this.http.post<AuthResponseDto>(`${environment.apiUrl}/auth/login`, credentials).pipe(

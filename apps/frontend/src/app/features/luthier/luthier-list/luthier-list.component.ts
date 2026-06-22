@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { LuthierDto } from '@luthiers/utils';
 import { LuthierService } from '../services/luthier.service';
+import { AuthService } from '../../auth/services/auth.service';
 
 @Component({
   selector: 'app-luthier-list',
@@ -18,9 +19,11 @@ import { LuthierService } from '../services/luthier.service';
           </a>
           <h1 class="text-3xl font-bold text-gray-800">Mestres Luthiers</h1>
         </div>
-        <a routerLink="/luthiers/novo" class="bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-lg shadow transition-colors">
-          Novo Luthier
-        </a>
+        @if (authService.isAdmin()) {
+          <a routerLink="/luthiers/novo" class="bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-lg shadow transition-colors">
+            Novo Luthier
+          </a>
+        }
       </div>
 
       <!-- Error State -->
@@ -61,7 +64,9 @@ import { LuthierService } from '../services/luthier.service';
                   <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Bancadas</th>
                   <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Certificação</th>
                   <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Abertura</th>
-                  <th scope="col" class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Ações</th>
+                  @if (authService.isAdmin()) {
+                    <th scope="col" class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Ações</th>
+                  }
                 </tr>
               </thead>
               <tbody class="bg-white divide-y divide-gray-200">
@@ -87,10 +92,12 @@ import { LuthierService } from '../services/luthier.service';
                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                       {{ luthier.dataAbertura | date:'dd/MM/yyyy' }}
                     </td>
-                    <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                      <a [routerLink]="['/luthiers', luthier.id, 'editar']" class="text-indigo-600 hover:text-indigo-900 mr-4">Editar</a>
-                      <button (click)="confirmDelete(luthier)" class="text-red-600 hover:text-red-900">Excluir</button>
-                    </td>
+                    @if (authService.isAdmin()) {
+                      <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                        <a [routerLink]="['/luthiers', luthier.id, 'editar']" class="text-indigo-600 hover:text-indigo-900 mr-4">Editar</a>
+                        <button (click)="confirmDelete(luthier)" class="text-red-600 hover:text-red-900">Excluir</button>
+                      </td>
+                    }
                   </tr>
                 }
               </tbody>
@@ -145,6 +152,7 @@ import { LuthierService } from '../services/luthier.service';
 })
 export class LuthierListComponent implements OnInit {
   private luthierService = inject(LuthierService);
+  authService = inject(AuthService);
 
   data = signal<LuthierDto[]>([]);
   loading = signal<boolean>(true);

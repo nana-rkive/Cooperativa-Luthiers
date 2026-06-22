@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { InstrumentoDto } from '@luthiers/utils';
 import { InstrumentoService } from '../services/instrumento.service';
+import { AuthService } from '../../auth/services/auth.service';
 
 @Component({
   selector: 'app-instrumento-list',
@@ -18,9 +19,11 @@ import { InstrumentoService } from '../services/instrumento.service';
           </a>
           <h1 class="text-3xl font-bold text-gray-800">Instrumentos em Manutenção</h1>
         </div>
-        <a routerLink="/instrumentos/novo" class="bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-lg shadow transition-colors">
-          Novo Registro
-        </a>
+        @if (authService.isAdmin()) {
+          <a routerLink="/instrumentos/novo" class="bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-lg shadow transition-colors">
+            Novo Registro
+          </a>
+        }
       </div>
 
       <!-- Error State -->
@@ -65,7 +68,9 @@ import { InstrumentoService } from '../services/instrumento.service';
                   <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Custo (R$)</th>
                   <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Data Entrada</th>
                   <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
-                  <th scope="col" class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Ações</th>
+                  @if (authService.isAdmin()) {
+                    <th scope="col" class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Ações</th>
+                  }
                 </tr>
               </thead>
               <tbody class="bg-white divide-y divide-gray-200">
@@ -96,10 +101,12 @@ import { InstrumentoService } from '../services/instrumento.service';
                         </span>
                       }
                     </td>
-                    <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                      <a [routerLink]="['/instrumentos', item.id, 'editar']" class="text-indigo-600 hover:text-indigo-900 mr-4">Editar</a>
-                      <button (click)="confirmDelete(item)" class="text-red-600 hover:text-red-900">Excluir</button>
-                    </td>
+                    @if (authService.isAdmin()) {
+                      <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                        <a [routerLink]="['/instrumentos', item.id, 'editar']" class="text-indigo-600 hover:text-indigo-900 mr-4">Editar</a>
+                        <button (click)="confirmDelete(item)" class="text-red-600 hover:text-red-900">Excluir</button>
+                      </td>
+                    }
                   </tr>
                 }
               </tbody>
@@ -153,6 +160,7 @@ import { InstrumentoService } from '../services/instrumento.service';
 })
 export class InstrumentoListComponent implements OnInit {
   private instrumentoService = inject(InstrumentoService);
+  authService = inject(AuthService);
 
   data = signal<InstrumentoDto[]>([]);
   loading = signal<boolean>(true);

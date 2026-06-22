@@ -33,7 +33,7 @@ describe('AuthService', () => {
     const loginDto: LoginDto = { email: 'test@test.com', senha: 'password' };
     const mockResponse: AuthResponseDto = {
       accessToken: 'mock-jwt-token',
-      usuario: { id: '1', email: 'test@test.com', nome: 'Test User', roles: ['user'] }
+      usuario: { id: 1, email: 'test@test.com', primeiroNome: 'Test', sobrenome: 'User', role: 'user' }
     };
 
     service.login(loginDto).subscribe();
@@ -41,7 +41,7 @@ describe('AuthService', () => {
     const req = httpTestingController.expectOne(`${environment.apiUrl}/auth/login`);
     expect(req.request.method).toBe('POST');
     expect(req.request.body).toEqual(loginDto);
-    
+
     req.flush(mockResponse);
 
     expect(service.jwtToken()).toBe('mock-jwt-token');
@@ -49,9 +49,8 @@ describe('AuthService', () => {
   });
 
   it('should clear signals on logout', () => {
-    // First set values manually via signals to simulate a logged-in state
     service.jwtToken.set('existing-token');
-    service.currentUser.set({ id: '1', email: 'test@test.com', nome: 'Test User', roles: [] });
+    service.currentUser.set({ id: 1, email: 'test@test.com', primeiroNome: 'Test', sobrenome: 'User', role: 'user' });
 
     service.logout();
 

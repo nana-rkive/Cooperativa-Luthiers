@@ -14,7 +14,7 @@ import { CommonModule } from '@angular/common';
     <div class="register-container max-w-md mx-auto mt-10 p-6 bg-white rounded-lg shadow-md">
       <h2 class="text-2xl font-bold mb-6 text-center">Cadastro</h2>
       
-      <div *ngIf="globalError()" class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-4">
+      <div *ngIf="globalError()" class="bg-red-100 text-red-700 p-3 rounded mb-4">
         {{ globalError() }}
       </div>
 
@@ -28,7 +28,7 @@ import { CommonModule } from '@angular/common';
               id="primeiroNome" 
               type="text" 
               formControlName="primeiroNome">
-            <p *ngIf="fieldHasError('primeiroNome')" class="text-red-500 text-xs italic mt-1">
+            <p *ngIf="fieldHasError('primeiroNome')" class="text-red-500 text-xs mt-1">
               {{ getFieldError('primeiroNome') }}
             </p>
           </div>
@@ -40,7 +40,7 @@ import { CommonModule } from '@angular/common';
               id="sobrenome" 
               type="text" 
               formControlName="sobrenome">
-            <p *ngIf="fieldHasError('sobrenome')" class="text-red-500 text-xs italic mt-1">
+            <p *ngIf="fieldHasError('sobrenome')" class="text-red-500 text-xs mt-1">
               {{ getFieldError('sobrenome') }}
             </p>
           </div>
@@ -54,7 +54,7 @@ import { CommonModule } from '@angular/common';
             id="email" 
             type="email" 
             formControlName="email">
-          <p *ngIf="fieldHasError('email')" class="text-red-500 text-xs italic mt-1">
+          <p *ngIf="fieldHasError('email')" class="text-red-500 text-xs mt-1">
             {{ getFieldError('email') }}
           </p>
         </div>
@@ -67,7 +67,7 @@ import { CommonModule } from '@angular/common';
             id="senha" 
             type="password" 
             formControlName="senha">
-          <p *ngIf="fieldHasError('senha')" class="text-red-500 text-xs italic mt-1">
+          <p *ngIf="fieldHasError('senha')" class="text-red-500 text-xs mt-1">
             {{ getFieldError('senha') }}
           </p>
         </div>
@@ -123,6 +123,8 @@ export class RegisterComponent {
     });
 
     const data = this.registerForm.value as RegisterDto;
+
+    this.registerForm.markAllAsTouched();
 
     this.authService.register(data).subscribe({
       next: () => {

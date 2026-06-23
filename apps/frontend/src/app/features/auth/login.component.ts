@@ -10,76 +10,7 @@ import { NgClass } from '@angular/common';
   selector: 'app-login',
   standalone: true,
   imports: [ReactiveFormsModule, NgClass, RouterLink],
-  template: `
-    <div class="min-h-screen w-full flex items-center justify-center bg-cover bg-center relative" style="background-image: url('login-bg.png');">
-      <!-- Película fosca branca com desfoque -->
-      <div class="absolute inset-0 bg-white/30 backdrop-blur-sm"></div>
-
-      <!-- Login Card -->
-      <div class="login-container relative z-10 max-w-md w-full mx-4 p-8 bg-white/90 backdrop-blur-lg rounded-2xl shadow-2xl border border-white/40">
-        <div class="text-center mb-8">
-          <span class="text-xs uppercase tracking-widest text-brand-brown-light font-bold block mb-2">Painel de Acesso</span>
-          <h1 class="text-3xl font-extrabold text-brand-brown tracking-tight mb-1">
-            Cooperativa de Luthiers
-          </h1>
-          <p class="text-sm text-gray-500 font-medium">Faça login para gerenciar a oficina</p>
-        </div>
-        
-        @if (globalError()) {
-          <div class="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg relative mb-4 text-sm">
-            {{ globalError() }}
-          </div>
-        }
-
-        <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
-          <div class="mb-4">
-            <label class="block text-gray-700 text-sm font-semibold mb-2" for="email">E-mail</label>
-            <input 
-              class="shadow-sm appearance-none border border-gray-300 rounded-lg w-full py-2.5 px-3.5 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-brand-brown-light focus:border-transparent transition-all" 
-              [ngClass]="{'border-red-500': fieldHasError('email')}"
-              id="email" 
-              type="email" 
-              formControlName="email">
-            @if (fieldHasError('email')) {
-              <p class="text-red-500 text-xs italic mt-1">
-                {{ getFieldError('email') }}
-              </p>
-            }
-          </div>
-
-          <div class="mb-6">
-            <label class="block text-gray-700 text-sm font-semibold mb-2" for="senha">Senha</label>
-            <input 
-              class="shadow-sm appearance-none border border-gray-300 rounded-lg w-full py-2.5 px-3.5 text-gray-700 mb-3 leading-tight focus:outline-none focus:ring-2 focus:ring-brand-brown-light focus:border-transparent transition-all" 
-              [ngClass]="{'border-red-500': fieldHasError('senha')}"
-              id="senha" 
-              type="password" 
-              formControlName="senha">
-            @if (fieldHasError('senha')) {
-              <p class="text-red-500 text-xs italic mt-1">
-                {{ getFieldError('senha') }}
-              </p>
-            }
-          </div>
-
-          <div class="flex items-center justify-between">
-            <button 
-              class="bg-brand-brown-light hover:bg-opacity-95 text-white font-bold py-2.5 px-4 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-brown-light focus:ring-offset-2 w-full transition-all shadow-sm" 
-              type="submit"
-              [disabled]="loading()">
-              {{ loading() ? 'Entrando...' : 'Entrar' }}
-            </button>
-          </div>
-          
-          <div class="text-center mt-6">
-            <a routerLink="/register" class="inline-block align-baseline font-semibold text-sm text-brand-brown-light hover:text-brand-brown transition-colors">
-              Não tem uma conta? Cadastre-se
-            </a>
-          </div>
-        </form>
-      </div>
-    </div>
-  `
+  templateUrl: './login.component.html'
 })
 export class LoginComponent {
   private fb = inject(FormBuilder);

@@ -13,13 +13,16 @@ import { parseAuthError } from '../../../core/utils/auth-error.util';
   imports: [CommonModule, ReactiveFormsModule, RouterLink],
   template: `
     <div class="container mx-auto p-4 max-w-3xl">
-      <div class="mb-6 flex items-center gap-4">
-        <a routerLink="/instrumentos" class="text-gray-500 hover:text-gray-700">
-          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
-          </svg>
-        </a>
-        <h1 class="text-3xl font-bold text-gray-800">
+      <div class="mb-6">
+        <div class="flex items-center mb-4">
+          <a routerLink="/instrumentos" class="text-gray-500 hover:text-brand-brown transition-colors flex items-center gap-2 font-semibold">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
+            </svg>
+            Voltar
+          </a>
+        </div>
+        <h1 class="text-3xl font-extrabold text-brand-brown">
           {{ isEditMode() ? 'Editar Instrumento' : 'Registrar Instrumento' }}
         </h1>
       </div>
@@ -27,14 +30,14 @@ import { parseAuthError } from '../../../core/utils/auth-error.util';
       <!-- Initial Loading -->
       @if (initialLoading()) {
         <div class="flex justify-center items-center py-20">
-          <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
-          <span class="ml-3 text-lg text-gray-600">Carregando dados...</span>
+          <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-brand-brown-light"></div>
+          <span class="ml-3 text-lg text-gray-600 font-medium">Carregando dados...</span>
         </div>
       } @else {
-        <div class="bg-white rounded-lg shadow-md p-6 border border-gray-200">
+        <div class="bg-white rounded-xl shadow-lg p-8 border border-gray-100">
           
           @if (globalError()) {
-            <div class="bg-red-100 border-l-4 border-red-500 text-red-700 p-4 mb-6 rounded shadow-sm">
+            <div class="bg-red-50 border-l-4 border-red-500 text-red-700 p-4 mb-6 rounded-lg shadow-sm">
               {{ globalError() }}
             </div>
           }
@@ -42,13 +45,13 @@ import { parseAuthError } from '../../../core/utils/auth-error.util';
           <form [formGroup]="form" (ngSubmit)="onSubmit()">
             
             <div class="mb-4">
-              <label for="modeloMadeira" class="block text-sm font-medium text-gray-700 mb-1">Modelo / Madeira</label>
+              <label for="modeloMadeira" class="block text-sm font-semibold text-gray-700 mb-1">Modelo / Madeira</label>
               <input 
                 type="text" 
                 id="modeloMadeira" 
                 formControlName="modeloMadeira"
                 placeholder="Ex: Violão de Nylon"
-                class="w-full px-3 py-2 border rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
+                class="w-full px-3.5 py-2.5 border rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-brand-brown-light focus:border-transparent transition-all"
                 [ngClass]="{'border-red-500': fieldHasError('modeloMadeira'), 'border-gray-300': !fieldHasError('modeloMadeira')}"
               >
               @if (fieldHasError('modeloMadeira')) {
@@ -58,11 +61,11 @@ import { parseAuthError } from '../../../core/utils/auth-error.util';
 
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
               <div>
-                <label for="luthierId" class="block text-sm font-medium text-gray-700 mb-1">Luthier Responsável</label>
+                <label for="luthierId" class="block text-sm font-semibold text-gray-700 mb-1">Luthier Responsável</label>
                 <select 
                   id="luthierId" 
                   formControlName="luthierId"
-                  class="w-full px-3 py-2 border rounded-md shadow-sm bg-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
+                  class="w-full px-3.5 py-2.5 border rounded-lg shadow-sm bg-white focus:outline-none focus:ring-2 focus:ring-brand-brown-light focus:border-transparent transition-all"
                   [ngClass]="{'border-red-500': fieldHasError('luthierId'), 'border-gray-300': !fieldHasError('luthierId')}"
                 >
                   <option [ngValue]="null" disabled>Selecione um luthier</option>
@@ -76,13 +79,13 @@ import { parseAuthError } from '../../../core/utils/auth-error.util';
               </div>
 
               <div>
-                <label for="dataEntrada" class="block text-sm font-medium text-gray-700 mb-1">Data de Entrada</label>
+                <label for="dataEntrada" class="block text-sm font-semibold text-gray-700 mb-1">Data de Entrada</label>
                 <input 
                   type="date" 
                   id="dataEntrada" 
                   formControlName="dataEntrada"
                   [max]="dataAtual"
-                  class="w-full px-3 py-2 border rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
+                  class="w-full px-3.5 py-2.5 border rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-brand-brown-light focus:border-transparent transition-all"
                   [ngClass]="{'border-red-500': fieldHasError('dataEntrada'), 'border-gray-300': !fieldHasError('dataEntrada')}"
                 >
                 @if (fieldHasError('dataEntrada')) {
@@ -92,14 +95,14 @@ import { parseAuthError } from '../../../core/utils/auth-error.util';
             </div>
 
             <div class="mb-6">
-              <label for="custoReparo" class="block text-sm font-medium text-gray-700 mb-1">Custo do Reparo (R$)</label>
+              <label for="custoReparo" class="block text-sm font-semibold text-gray-700 mb-1">Custo do Reparo (R$)</label>
               <input 
                 type="number" 
                 id="custoReparo" 
                 formControlName="custoReparo"
                 min="0"
                 step="0.01"
-                class="w-full md:w-1/2 px-3 py-2 border rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
+                class="w-full md:w-1/2 px-3.5 py-2.5 border rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-brand-brown-light focus:border-transparent transition-all"
                 [ngClass]="{'border-red-500': fieldHasError('custoReparo'), 'border-gray-300': !fieldHasError('custoReparo')}"
               >
               @if (fieldHasError('custoReparo')) {
@@ -112,25 +115,25 @@ import { parseAuthError } from '../../../core/utils/auth-error.util';
                 id="reparoConcluido" 
                 type="checkbox" 
                 formControlName="reparoConcluido"
-                class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
+                class="h-4 w-4 text-brand-brown-light focus:ring-brand-brown-light border-gray-300 rounded"
               >
-              <label for="reparoConcluido" class="ml-2 block text-sm text-gray-900">
+              <label for="reparoConcluido" class="ml-2 block text-sm text-gray-900 font-semibold">
                 Reparo Concluído
               </label>
             </div>
 
-            <div class="flex justify-end gap-3 pt-4 border-t border-gray-200">
+            <div class="flex justify-end gap-3 pt-4 border-t border-gray-100">
               <button 
                 type="button" 
                 routerLink="/instrumentos"
-                class="px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+                class="px-4 py-2 border border-gray-300 rounded-lg shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-brand-brown-light"
               >
                 Cancelar
               </button>
               <button 
                 type="submit" 
                 [disabled]="saving()"
-                class="px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50 flex items-center gap-2"
+                class="px-5 py-2 border border-transparent rounded-lg shadow-sm text-sm font-semibold text-white bg-brand-brown-light hover:bg-opacity-95 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-brand-brown-light disabled:opacity-50 flex items-center gap-2"
               >
                 @if (saving()) {
                   <svg class="animate-spin -ml-1 mr-1 h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">

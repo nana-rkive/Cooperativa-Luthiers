@@ -11,24 +11,24 @@ import { AuthService } from '../../auth/services/auth.service';
   imports: [DatePipe, RouterLink],
   template: `
     <div class="container mx-auto p-4 max-w-5xl">
-      <div class="flex justify-between items-center mb-6">
-        <div class="flex items-center gap-4">
-          <a routerLink="/dashboard" class="flex items-center text-gray-600 hover:text-blue-600 transition-colors font-medium">
+      <div class="mb-6">
+        <div class="flex justify-between items-center mb-4">
+          <a routerLink="/dashboard" class="flex items-center text-gray-600 hover:text-brand-brown transition-colors font-semibold">
             <svg class="w-5 h-5 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
             Voltar
           </a>
-          <h1 class="text-3xl font-bold text-gray-800">Mestres Luthiers</h1>
+          @if (authService.isAdmin()) {
+            <a routerLink="/luthiers/novo" class="bg-brand-brown-light hover:bg-opacity-95 text-white font-semibold py-2 px-5 rounded-lg shadow-sm transition-all duration-200">
+              Novo Luthier
+            </a>
+          }
         </div>
-        @if (authService.isAdmin()) {
-          <a routerLink="/luthiers/novo" class="bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-lg shadow transition-colors">
-            Novo Luthier
-          </a>
-        }
+        <h1 class="text-3xl font-extrabold text-brand-brown">Mestres Luthiers</h1>
       </div>
 
       <!-- Error State -->
       @if (error()) {
-        <div class="bg-red-100 border-l-4 border-red-500 text-red-700 p-4 mb-6 rounded shadow-sm" role="alert">
+        <div class="bg-red-50 border-l-4 border-red-500 text-red-700 p-4 mb-6 rounded shadow-sm" role="alert">
           <p class="font-bold">Erro ao carregar dados</p>
           <p>{{ error() }}</p>
           <button (click)="loadLuthiers()" class="mt-2 text-sm underline text-red-800 hover:text-red-900">
@@ -40,62 +40,62 @@ import { AuthService } from '../../auth/services/auth.service';
       <!-- Loading State -->
       @if (loading()) {
         <div class="flex justify-center items-center py-20">
-          <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
-          <span class="ml-3 text-lg text-gray-600">Carregando luthiers...</span>
+          <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-brand-brown-light"></div>
+          <span class="ml-3 text-lg text-gray-600 font-medium">Carregando luthiers...</span>
         </div>
       } @else if (!error()) {
         
         <!-- Empty State -->
         @if (isEmpty()) {
-          <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-12 text-center">
+          <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-12 text-center">
             <svg class="mx-auto h-16 w-16 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M17 14v6m-3-3h6M6 10h2a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v2a2 2 0 002 2zm10 0h2a2 2 0 002-2V6a2 2 0 00-2-2h-2a2 2 0 00-2 2v2a2 2 0 002 2zM6 20h2a2 2 0 002-2v-2a2 2 0 00-2-2H6a2 2 0 00-2 2v2a2 2 0 002 2z" />
             </svg>
-            <h3 class="mt-4 text-lg font-medium text-gray-900">Nenhum luthier cadastrado</h3>
+            <h3 class="mt-4 text-lg font-semibold text-brand-brown">Nenhum luthier cadastrado</h3>
             <p class="mt-2 text-sm text-gray-500">Clique em 'Novo Luthier' no topo da página para adicionar o primeiro mestre à cooperativa.</p>
           </div>
         } @else {
           <!-- Success State: Table -->
-          <div class="bg-white shadow-md rounded-lg overflow-hidden border border-gray-200">
+          <div class="bg-white shadow-sm rounded-xl overflow-hidden border border-gray-200">
             <table class="min-w-full divide-y divide-gray-200">
-              <thead class="bg-gray-50">
+              <thead class="bg-[#f3e8e2]">
                 <tr>
-                  <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Nome</th>
-                  <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Bancadas</th>
-                  <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Certificação</th>
-                  <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Abertura</th>
+                  <th scope="col" class="px-6 py-3.5 text-left text-xs font-bold text-brand-brown uppercase tracking-wider">Nome</th>
+                  <th scope="col" class="px-6 py-3.5 text-left text-xs font-bold text-brand-brown uppercase tracking-wider">Bancadas</th>
+                  <th scope="col" class="px-6 py-3.5 text-left text-xs font-bold text-brand-brown uppercase tracking-wider">Certificação</th>
+                  <th scope="col" class="px-6 py-3.5 text-left text-xs font-bold text-brand-brown uppercase tracking-wider">Abertura</th>
                   @if (authService.isAdmin()) {
-                    <th scope="col" class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Ações</th>
+                    <th scope="col" class="px-6 py-3.5 text-right text-xs font-bold text-brand-brown uppercase tracking-wider">Ações</th>
                   }
                 </tr>
               </thead>
               <tbody class="bg-white divide-y divide-gray-200">
                 @for (luthier of data(); track luthier.id) {
-                  <tr class="hover:bg-gray-50 transition-colors">
+                  <tr class="hover:bg-brand-offwhite hover:bg-opacity-50 transition-colors">
                     <td class="px-6 py-4 whitespace-nowrap">
-                      <div class="text-sm font-medium text-gray-900">{{ luthier.nomeMestre }}</div>
+                      <div class="text-sm font-semibold text-gray-900">{{ luthier.nomeMestre }}</div>
                     </td>
                     <td class="px-6 py-4 whitespace-nowrap">
-                      <div class="text-sm text-gray-500">{{ luthier.bancadasNum }}</div>
+                      <div class="text-sm text-gray-600 font-medium">{{ luthier.bancadasNum }}</div>
                     </td>
                     <td class="px-6 py-4 whitespace-nowrap">
                       @if (luthier.certificada) {
-                        <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
+                        <span class="px-2.5 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-50 text-green-700 border border-green-200">
                           Sim
                         </span>
                       } @else {
-                        <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-gray-100 text-gray-800">
+                        <span class="px-2.5 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-gray-50 text-gray-600 border border-gray-200">
                           Não
                         </span>
                       }
                     </td>
-                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600 font-medium">
                       {{ luthier.dataAbertura | date:'dd/MM/yyyy' }}
                     </td>
                     @if (authService.isAdmin()) {
-                      <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                        <a [routerLink]="['/luthiers', luthier.id, 'editar']" class="text-indigo-600 hover:text-indigo-900 mr-4">Editar</a>
-                        <button (click)="confirmDelete(luthier)" class="text-red-600 hover:text-red-900">Excluir</button>
+                      <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-semibold">
+                        <a [routerLink]="['/luthiers', luthier.id, 'editar']" class="inline-flex items-center px-3 py-1.5 border border-transparent text-xs font-bold rounded-lg shadow-sm text-amber-950 bg-amber-400 hover:bg-amber-500 mr-3 transition-colors">Editar</a>
+                        <button (click)="confirmDelete(luthier)" class="text-red-600 hover:text-red-900 transition-colors">Excluir</button>
                       </td>
                     }
                   </tr>
